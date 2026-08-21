@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Support — Heads Up</title>
+<style>
+  :root { --ink:#16161a; --muted:#5b5b66; --line:#e6e6ec; --accent:#F5A21A; --bg:#ffffff; --card:#fafafb; }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 17px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 72px 24px 96px; }
+  header { display: flex; align-items: center; gap: 14px; margin-bottom: 56px; }
+  .badge { width: 40px; height: 40px; border-radius: 10px;
+    background: linear-gradient(160deg, #2a2a35, #14141a); position: relative; flex: none; }
+  .badge::after { content:""; position:absolute; inset:9px; border-radius:50%;
+    border:3px solid rgba(255,255,255,.15); border-top-color: var(--accent);
+    border-right-color: var(--accent); transform: rotate(35deg); }
+  .brand { font-weight: 600; font-size: 16px; letter-spacing: .2px; }
+  .brand span { color: var(--muted); font-weight: 500; }
+  h1 { font-size: 40px; line-height: 1.15; letter-spacing: -.5px; margin: 0 0 10px; }
+  .tagline { color: var(--muted); font-size: 19px; margin: 0 0 40px; }
+  .contact { border: 1px solid var(--line); background: var(--card); border-radius: 14px;
+    padding: 24px 26px; margin: 0 0 48px; }
+  .contact h2 { margin: 0 0 6px; font-size: 20px; }
+  .contact p { margin: 0; color: var(--muted); }
+  .contact a { font-weight: 600; }
+  h2 { font-size: 21px; letter-spacing: -.2px; margin: 40px 0 6px; }
+  .q { font-weight: 600; margin: 30px 0 6px; font-size: 18px; }
+  p { margin: 0 0 14px; }
+  a { color: #C9761A; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  strong { font-weight: 600; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--line);
+    color: var(--muted); font-size: 14px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; }
+  footer a { color: var(--muted); }
+  @media (max-width: 520px) { .wrap { padding: 48px 20px 72px; } h1 { font-size: 32px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="badge" aria-hidden="true"></div>
+    <div class="brand">Heads Up <span>· Benvenuti Software</span></div>
+  </header>
+
+  <h1>Support</h1>
+  <p class="tagline">Stay in flow. Never miss your next meeting.</p>
+
+  <div class="contact">
+    <h2>Get in touch</h2>
+    <p>Questions, bugs, or feedback? Email
+      <a href="mailto:support@benvenutisoftware.com">support@benvenutisoftware.com</a>
+      and we'll get back to you.</p>
+  </div>
+
+  <h2>Frequently asked questions</h2>
+
+  <p class="q">How do I let Heads Up see my meetings?</p>
+  <p>On first launch, Heads Up asks for Calendar access — choose <strong>Allow</strong>. If you missed
+  it, open <strong>System Settings → Privacy &amp; Security → Calendars</strong> and turn on Heads Up.
+  Access is read-only; Heads Up never changes your calendar.</p>
+
+  <p class="q">Which calendars does it work with?</p>
+  <p>Any calendar that appears in the macOS Calendar app — including iCloud, Google, Outlook, and
+  Exchange accounts. Add those accounts in <strong>System Settings → Internet Accounts</strong> and
+  Heads Up will see their events.</p>
+
+  <p class="q">A meeting isn't showing up. Why?</p>
+  <p>Heads Up focuses on real meetings, so it skips events that are all-day, that you've declined, that
+  are marked "free," or that run longer than four hours (offsites and travel blocks). If an event is
+  timed and on your calendar, it will appear.</p>
+
+  <p class="q">How do the reminders work?</p>
+  <p>By default you get a gentle card five minutes before, and a full-screen reminder the moment the
+  meeting starts. You can change which reminders fire — 15, 10, 5, 2 minutes before, and at start —
+  in <strong>Preferences → Reminders</strong>. Press <strong>Esc</strong> to dismiss any reminder.</p>
+
+  <p class="q">Which meeting links can it open?</p>
+  <p>Heads Up detects Zoom, Google Meet, Microsoft Teams, and Webex links, plus generic links, and
+  opens them with one click on <strong>Join</strong>.</p>
+
+  <p class="q">How do I make it launch automatically?</p>
+  <p>Open <strong>Preferences → General</strong> and turn on <strong>Launch when I log in</strong>.</p>
+
+  <p class="q">Does it collect my data or use the internet?</p>
+  <p>No. Heads Up reads your calendar on your Mac to show your next meeting and nothing else — no
+  account, no tracking, no data leaves your device. The only network activity is your browser opening
+  a meeting link when you click Join. See our <a href="./privacy">Privacy Policy</a>.</p>
+
+  <footer>
+    <span>© 2026 Benvenuti Software</span>
+    <span><a href="./privacy">Privacy Policy</a></span>
+  </footer>
+</div>
+</body>
+</html>

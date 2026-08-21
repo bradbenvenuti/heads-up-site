@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Heads Up — Never miss your next meeting</title>
+<meta name="description" content="Heads Up lives in your Mac's menu bar, counts down to your next meeting, and takes over your screen the moment it starts. $19.99, one-time. No account, no tracking.">
+<style>
+  :root {
+    --ink:#16161a; --muted:#5b5b66; --line:#e6e6ec; --accent:#F5A21A;
+    --bg:#ffffff; --card:#fafafb; --link:#C9761A;
+    --amber:#FFA829; --coral:#FF4A66; --join:#0A82FF;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 17px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  a { color: var(--link); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  h1, h2 { margin: 0; line-height: 1.15; }
+  p { margin: 0; }
+
+  .cta {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: linear-gradient(135deg, var(--amber), var(--coral));
+    color: #fff; font-weight: 600; border-radius: 999px; text-decoration: none;
+  }
+  .cta:hover { text-decoration: none; filter: brightness(1.06); }
+  .cta.large { font-size: 17px; padding: 16px 28px; box-shadow: 0 12px 32px rgba(255,74,102,0.3); }
+  .cta.small { font-size: 15px; padding: 10px 20px; }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    background: linear-gradient(165deg, #23223A 0%, #16151F 55%, #0F0F16 100%);
+    color: #fff; padding-bottom: 96px; overflow: hidden;
+  }
+  nav {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 24px 64px; gap: 16px;
+  }
+  .brand { display: flex; align-items: center; gap: 14px; font-weight: 600; font-size: 17px; letter-spacing: .2px; }
+  .badge {
+    width: 40px; height: 40px; border-radius: 10px; flex: none;
+    background: linear-gradient(160deg, #2a2a35, #14141a);
+    border: 1px solid rgba(255,255,255,.08);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .nav-links { display: flex; align-items: center; gap: 32px; }
+  .nav-links a { color: rgba(255,255,255,.72); font-size: 15px; font-weight: 500; }
+  .nav-links a:hover { color: #fff; text-decoration: none; }
+
+  .hero-grid {
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 64px; align-items: center; padding: 72px 96px 0;
+    max-width: 1440px; margin: 0 auto;
+  }
+  .hero-copy { display: flex; flex-direction: column; gap: 28px; align-items: flex-start; }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    border: 1px solid rgba(255,255,255,.16); border-radius: 999px; padding: 6px 14px;
+    font-size: 13px; font-weight: 600; letter-spacing: .4px; color: rgba(255,255,255,.75);
+  }
+  .hero h1 { font-size: clamp(38px, 4.5vw, 64px); letter-spacing: -1.5px; font-weight: 700; line-height: 1.06; }
+  .hero-sub { font-size: 20px; line-height: 1.6; color: rgba(255,255,255,.72); max-width: 480px; }
+  .hero-cta { display: flex; flex-direction: column; gap: 12px; align-items: flex-start; }
+  .fine { font-size: 14px; color: rgba(255,255,255,.55); }
+
+  .hero-visual { position: relative; display: flex; flex-direction: column; align-items: flex-end; }
+  .hero-visual::before {
+    content: ""; position: absolute; top: -60px; right: -40px; width: 480px; height: 480px;
+    background: radial-gradient(circle, rgba(255,168,41,.14) 0%, rgba(255,74,102,.06) 45%, rgba(0,0,0,0) 70%);
+    pointer-events: none;
+  }
+  .menubar {
+    position: relative; width: 100%; max-width: 560px;
+    background: rgba(30,30,40,.92); border: 1px solid rgba(255,255,255,.10); border-radius: 12px;
+    padding: 10px 18px; display: flex; justify-content: flex-end; align-items: center; gap: 18px;
+    box-shadow: 0 24px 60px rgba(0,0,0,.45); font-size: 14px;
+  }
+  .menubar .countdown { display: flex; align-items: center; gap: 7px; font-weight: 600; color: var(--amber); }
+  .menubar .clock { font-weight: 500; color: rgba(255,255,255,.85); }
+  .dropdown {
+    position: relative; width: 330px; max-width: 100%; margin: 8px 56px 0 0;
+    background: rgba(44,44,54,.97); border: 1px solid rgba(255,255,255,.10); border-radius: 14px;
+    padding: 16px; display: flex; flex-direction: column; gap: 12px;
+    box-shadow: 0 32px 80px rgba(0,0,0,.55); font-size: 14px;
+  }
+  .dd-label { font-size: 11px; font-weight: 600; letter-spacing: .6px; color: rgba(255,255,255,.45); }
+  .dd-next { display: flex; flex-direction: column; gap: 3px; }
+  .dd-next .title { font-size: 16px; font-weight: 600; color: #fff; }
+  .dd-next .when { color: rgba(255,255,255,.55); }
+  .dd-join { background: var(--join); color: #fff; font-weight: 600; text-align: center; border-radius: 8px; padding: 9px 0; }
+  .dd-rule { height: 1px; background: rgba(255,255,255,.10); }
+  .dd-list { display: flex; flex-direction: column; gap: 8px; }
+  .dd-row { display: flex; gap: 14px; color: rgba(255,255,255,.85); }
+  .dd-row .time { width: 44px; color: rgba(255,255,255,.5); font-variant-numeric: tabular-nums; }
+  .dd-menu { display: flex; flex-direction: column; gap: 7px; color: rgba(255,255,255,.75); }
+
+  /* ---------- Feature rows ---------- */
+  .feature {
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 96px; align-items: center; padding: 112px 120px;
+    max-width: 1440px; margin: 0 auto;
+  }
+  .feature.alt-bg { max-width: none; }
+  .alt-bg { background: var(--card); }
+  .feature-wrap { padding: 112px 120px; }
+  .alt-bg .feature-inner {
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 96px; align-items: center; max-width: 1440px; margin: 0 auto;
+  }
+  .kicker { font-size: 13px; font-weight: 700; letter-spacing: 1px; color: var(--link); }
+  .feature h2, .band h2, .pricing h2 { font-size: clamp(28px, 3vw, 40px); letter-spacing: -.5px; }
+  .feature-copy { display: flex; flex-direction: column; gap: 16px; }
+  .feature-copy p { font-size: 18px; line-height: 1.65; color: var(--muted); }
+  .feature-visual { display: flex; justify-content: center; }
+
+  .takeover-stage {
+    background: linear-gradient(165deg, #23223A, #12121C); border-radius: 20px;
+    padding: 56px 48px; display: flex; justify-content: center;
+    box-shadow: 0 24px 64px rgba(18,18,28,.25); width: 100%;
+  }
+  .takeover-card {
+    background: rgba(245,245,248,.97); border-radius: 18px; padding: 28px 36px;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    box-shadow: 0 24px 60px rgba(0,0,0,.5); width: 320px; max-width: 100%;
+  }
+  .takeover-card .starts { font-size: 12px; font-weight: 600; letter-spacing: 2px; color: var(--muted); }
+  .takeover-card .count { font-size: 72px; font-weight: 200; color: #F58411; font-variant-numeric: tabular-nums; line-height: 1.1; }
+  .takeover-card .meeting { font-size: 22px; font-weight: 600; }
+  .takeover-card .when { font-size: 14px; color: var(--muted); }
+  .takeover-card .actions { display: flex; gap: 8px; margin-top: 18px; flex-wrap: wrap; justify-content: center; }
+  .pill { font-size: 14px; border-radius: 9px; padding: 9px 13px; }
+  .pill.join { background: var(--join); color: #fff; font-weight: 600; padding: 9px 20px; }
+  .pill.gray { background: var(--line); color: var(--ink); font-weight: 500; }
+
+  .join-demo { display: flex; flex-direction: column; gap: 14px; align-items: center; width: 100%; }
+  .join-card {
+    width: 100%; max-width: 420px; background: var(--card); border: 1px solid var(--line);
+    border-radius: 16px; padding: 20px 24px; display: flex; justify-content: space-between;
+    align-items: center; gap: 16px; box-shadow: 0 8px 28px rgba(22,22,26,.06);
+  }
+  .join-card .title { font-size: 16px; font-weight: 600; }
+  .join-card .when { font-size: 13px; color: var(--muted); }
+  .join-card .btn { background: var(--join); color: #fff; font-size: 14px; font-weight: 600; padding: 9px 24px; border-radius: 999px; flex: none; }
+  .chips { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+  .chip {
+    display: flex; align-items: center; gap: 7px; border: 1px solid var(--line);
+    border-radius: 999px; padding: 7px 14px; font-size: 13px; font-weight: 500; color: var(--muted);
+  }
+
+  /* ---------- Capability trio ---------- */
+  .trio {
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px;
+    padding: 96px 120px; max-width: 1440px; margin: 0 auto;
+  }
+  .trio-card {
+    background: var(--bg); border: 1px solid var(--line); border-radius: 14px;
+    padding: 28px; display: flex; flex-direction: column; gap: 10px;
+  }
+  .trio-card .t { font-size: 17px; font-weight: 600; }
+  .trio-card p { font-size: 15px; line-height: 1.6; color: var(--muted); }
+
+  /* ---------- Privacy band ---------- */
+  .band {
+    background: linear-gradient(165deg, #1C1B2B, #0F0F16); color: #fff;
+    padding: 104px 24px; display: flex; flex-direction: column; gap: 40px;
+    align-items: center; text-align: center;
+  }
+  .band-head { display: flex; flex-direction: column; gap: 14px; align-items: center; }
+  .band p { font-size: 18px; line-height: 1.65; color: rgba(255,255,255,.68); max-width: 640px; }
+  .band-points { display: flex; gap: 24px 56px; flex-wrap: wrap; justify-content: center; }
+  .point { display: flex; align-items: center; gap: 10px; font-size: 16px; font-weight: 500; color: rgba(255,255,255,.85); }
+
+  /* ---------- Pricing ---------- */
+  .pricing {
+    padding: 112px 24px; display: flex; flex-direction: column; align-items: center;
+    gap: 24px; text-align: center;
+  }
+  .price { font-size: clamp(56px, 6vw, 76px); font-weight: 700; letter-spacing: -2px; line-height: 1; }
+  .pricing p { font-size: 18px; line-height: 1.65; color: var(--muted); max-width: 460px; }
+  .pricing .fine { color: var(--muted); }
+
+  /* ---------- Footer ---------- */
+  footer {
+    border-top: 1px solid var(--line); padding: 32px 64px;
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    flex-wrap: wrap; color: var(--muted); font-size: 14px;
+  }
+  footer .links { display: flex; gap: 28px; flex-wrap: wrap; }
+  footer a { color: var(--muted); }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 960px) {
+    nav { padding: 18px 20px; }
+    .nav-links { gap: 20px; }
+    .nav-links a:not(.cta) { display: none; }
+    .hero-grid { grid-template-columns: 1fr; padding: 40px 24px 0; gap: 48px; text-align: center; }
+    .hero-copy, .hero-cta { align-items: center; }
+    .hero-visual { align-items: center; }
+    .hero-visual::before { display: none; }
+    .dropdown { margin-right: 0; }
+    .feature, .alt-bg .feature-inner { grid-template-columns: 1fr; gap: 40px; text-align: center; padding: 64px 24px; }
+    .alt-bg .feature-inner { padding: 0; }
+    .feature-wrap { padding: 64px 24px; }
+    .takeover-stage { padding: 32px 20px; }
+    .feature-copy { align-items: center; }
+    .feature.flip .feature-visual { order: -1; }
+    .trio { grid-template-columns: 1fr; padding: 64px 24px; }
+    .band { padding: 64px 24px; }
+    .pricing { padding: 64px 24px; }
+    footer { justify-content: center; text-align: center; padding: 24px; flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <nav>
+    <div class="brand">
+      <div class="badge" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 22 22">
+          <defs><linearGradient id="ringNav" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#FFA829"/><stop offset="1" stop-color="#FF4A66"/></linearGradient></defs>
+          <circle cx="11" cy="11" r="8" stroke="rgba(255,255,255,0.16)" stroke-width="3" fill="none"/>
+          <circle cx="11" cy="11" r="8" stroke="url(#ringNav)" stroke-width="3" fill="none" stroke-linecap="round" stroke-dasharray="36 51" transform="rotate(-90 11 11)"/>
+          <circle cx="11" cy="3" r="1.6" fill="#fff"/>
+        </svg>
+      </div>
+      Heads Up
+    </div>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="./support">Support</a>
+      <a class="cta small" href="#pricing">Get the app</a>
+    </div>
+  </nav>
+
+  <div class="hero-grid">
+    <div class="hero-copy">
+      <div class="eyebrow">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#F5A21A" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="8" cy="8" r="6"/><path d="M8 4.5 V8 l2.5 1.5"/></svg>
+        FOR YOUR MAC MENU BAR
+      </div>
+      <h1>Never miss your next meeting.</h1>
+      <p class="hero-sub">Heads Up lives in your Mac's menu bar, counts down to your next meeting, and takes over your screen the moment it starts — so you stay in flow without watching the clock.</p>
+      <div class="hero-cta">
+        <a class="cta large" href="#">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 2 v9"/><path d="M5.5 8 L9 11.5 L12.5 8"/><path d="M3 12.5 V14 a1.5 1.5 0 0 0 1.5 1.5 h9 a1.5 1.5 0 0 0 1.5 -1.5 v-1.5"/></svg>
+          Download on the Mac App Store
+        </a>
+        <span class="fine">$19.99 · one-time purchase · macOS 13 or later</span>
+      </div>
+    </div>
+
+    <div class="hero-visual" aria-hidden="true">
+      <div class="menubar">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="rgba(255,255,255,0.75)" stroke-width="1.4" stroke-linecap="round"><path d="M2 11 C2 8 4 6.5 8 6.5 C12 6.5 14 8 14 11"/><path d="M4.5 9 C4.5 7.5 6 6.9 8 6.9"/><circle cx="8" cy="12" r="1" fill="rgba(255,255,255,0.75)" stroke="none"/></svg>
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="rgba(255,255,255,0.75)" stroke-width="1.4" stroke-linecap="round"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5 L14 14"/></svg>
+        <span class="countdown">
+          <svg width="20" height="20" viewBox="0 0 22 22">
+            <defs><linearGradient id="ringBar" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#FFA829"/><stop offset="1" stop-color="#FF4A66"/></linearGradient></defs>
+            <circle cx="11" cy="11" r="8" stroke="rgba(255,255,255,0.18)" stroke-width="3.5" fill="none"/>
+            <circle cx="11" cy="11" r="8" stroke="url(#ringBar)" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-dasharray="30 51" transform="rotate(-90 11 11)"/>
+          </svg>
+          12m
+        </span>
+        <span class="clock">Tue 10:48</span>
+      </div>
+      <div class="dropdown">
+        <div class="dd-next">
+          <span class="dd-label">NEXT MEETING</span>
+          <span class="title">Engineering Sync</span>
+          <span class="when">Starts in 12 minutes</span>
+        </div>
+        <div class="dd-join">Join</div>
+        <div class="dd-rule"></div>
+        <div class="dd-list">
+          <span class="dd-label">TODAY'S MEETINGS</span>
+          <div class="dd-row"><span class="time">11:00</span><span>Product Review</span></div>
+          <div class="dd-row"><span class="time">2:00</span><span>Customer Call</span></div>
+          <div class="dd-row"><span class="time">4:30</span><span>Design 1:1</span></div>
+        </div>
+        <div class="dd-rule"></div>
+        <div class="dd-menu">
+          <span>Preferences…</span>
+          <span>Quit Heads Up</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- Feature 1: Radar -->
+  <section class="feature" id="features">
+    <div class="feature-visual" aria-hidden="true">
+      <svg width="260" height="260" viewBox="0 0 260 260">
+        <defs><linearGradient id="ringBig" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#FFA829"/><stop offset="1" stop-color="#FF4A66"/></linearGradient></defs>
+        <circle cx="130" cy="130" r="104" stroke="#e6e6ec" stroke-width="18" fill="none"/>
+        <circle cx="130" cy="130" r="104" stroke="url(#ringBig)" stroke-width="18" fill="none" stroke-linecap="round" stroke-dasharray="470 654" transform="rotate(-90 130 130)"/>
+        <text x="130" y="122" text-anchor="middle" font-size="52" font-weight="300" fill="#16161a" font-family="-apple-system, BlinkMacSystemFont, sans-serif">12m</text>
+        <text x="130" y="156" text-anchor="middle" font-size="16" font-weight="600" fill="#5b5b66" font-family="-apple-system, BlinkMacSystemFont, sans-serif" letter-spacing="1">TO GO</text>
+      </svg>
+    </div>
+    <div class="feature-copy">
+      <span class="kicker">THE MEETING RADAR</span>
+      <h2>Your day, at a glance.</h2>
+      <p>A quiet ring in your menu bar fills as your next meeting approaches. One glance tells you how long you have — no clock math, no anxious tab-switching to your calendar.</p>
+      <p>Open the dropdown for the full day: what's next, what's later, and how much room you have in between.</p>
+    </div>
+  </section>
+
+  <!-- Feature 2: Takeover -->
+  <section class="alt-bg feature-wrap">
+    <div class="feature-inner">
+      <div class="feature-copy">
+        <span class="kicker">REMINDERS THAT WORK</span>
+        <h2>Impossible to miss.</h2>
+        <p>A gentle card slides in before the meeting. When it starts, Heads Up takes over your whole screen — every monitor, if you like — until you join, snooze, or dismiss.</p>
+        <p>Choose exactly which reminders fire: 15, 10, 5, or 2 minutes before, and at start. Press Esc to dismiss any of them.</p>
+      </div>
+      <div class="feature-visual" aria-hidden="true">
+        <div class="takeover-stage">
+          <div class="takeover-card">
+            <span class="starts">STARTS IN</span>
+            <span class="count">1:47</span>
+            <span class="meeting">Engineering Weekly</span>
+            <span class="when">11:00 – 11:30 AM</span>
+            <div class="actions">
+              <span class="pill join">Join</span>
+              <span class="pill gray">Snooze</span>
+              <span class="pill gray">Dismiss</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Feature 3: Join -->
+  <section class="feature flip">
+    <div class="feature-visual" aria-hidden="true">
+      <div class="join-demo">
+        <div class="join-card">
+          <div>
+            <div class="title">Customer Call</div>
+            <div class="when">2:00 PM · Zoom</div>
+          </div>
+          <span class="btn">Join</span>
+        </div>
+        <div class="chips">
+          <span class="chip">Zoom</span>
+          <span class="chip">Google Meet</span>
+          <span class="chip">Microsoft Teams</span>
+          <span class="chip">Webex</span>
+        </div>
+      </div>
+    </div>
+    <div class="feature-copy">
+      <span class="kicker">STRAIGHT INTO THE CALL</span>
+      <h2>One click to join.</h2>
+      <p>Heads Up finds the meeting link buried in the invite — Zoom, Google Meet, Microsoft Teams, Webex, or any other link — and puts a Join button everywhere a reminder appears.</p>
+    </div>
+  </section>
+
+  <!-- Capability trio -->
+  <section class="alt-bg">
+    <div class="trio">
+      <div class="trio-card">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F5A21A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 9.5 H21"/><path d="M8 3 V6.5 M16 3 V6.5"/></svg>
+        <span class="t">Every calendar you use</span>
+        <p>Works with anything in the macOS Calendar app — iCloud, Google, Outlook, and Exchange accounts.</p>
+      </div>
+      <div class="trio-card">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F5A21A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5 H20 L14 12.5 V19 L10 17 V12.5 Z"/></svg>
+        <span class="t">Only real meetings</span>
+        <p>All-day events, declined invites, and "free" blocks are filtered out, so reminders only fire for meetings you'll actually attend.</p>
+      </div>
+      <div class="trio-card">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F5A21A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 V11"/><path d="M6.6 6.6 a7.5 7.5 0 1 0 10.8 0"/></svg>
+        <span class="t">Always on duty</span>
+        <p>Turn on "Launch when I log in" once, and Heads Up is quietly watching your calendar every time you sit down.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Privacy band -->
+  <section class="band">
+    <div class="band-head">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#F5A21A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 L19.5 6 V11 C19.5 16 16.5 19.5 12 21 C7.5 19.5 4.5 16 4.5 11 V6 Z"/><path d="M9 11.5 L11.2 13.7 L15.2 9.2"/></svg>
+      <h2>Private by design.</h2>
+      <p>Heads Up reads your calendar on your Mac to find your next meeting — and does nothing else with it. The only network activity is your browser opening a link when you click Join.</p>
+    </div>
+    <div class="band-points">
+      <span class="point"><svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="#FFA829" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 8.5 L6.5 12 L13 4.5"/></svg>No account</span>
+      <span class="point"><svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="#FFA829" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 8.5 L6.5 12 L13 4.5"/></svg>No tracking</span>
+      <span class="point"><svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="#FFA829" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 8.5 L6.5 12 L13 4.5"/></svg>Read-only calendar access</span>
+      <span class="point"><svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="#FFA829" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 8.5 L6.5 12 L13 4.5"/></svg>Nothing leaves your Mac</span>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section class="pricing" id="pricing">
+    <h2>One price. Yours forever.</h2>
+    <div class="price">$19.99</div>
+    <p>A single purchase on the Mac App Store. No subscription, no account, no upsells — just an app that gets you to your meetings.</p>
+    <a class="cta large" href="#">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 2 v9"/><path d="M5.5 8 L9 11.5 L12.5 8"/><path d="M3 12.5 V14 a1.5 1.5 0 0 0 1.5 1.5 h9 a1.5 1.5 0 0 0 1.5 -1.5 v-1.5"/></svg>
+      Download on the Mac App Store
+    </a>
+    <span class="fine">Requires macOS 13 or later.</span>
+  </section>
+</main>
+
+<footer>
+  <span>© 2026 Benvenuti Software</span>
+  <div class="links">
+    <a href="mailto:support@benvenutisoftware.com">support@benvenutisoftware.com</a>
+    <a href="./support">Support</a>
+    <a href="./privacy">Privacy Policy</a>
+  </div>
+</footer>
+
+</body>
+</html>
