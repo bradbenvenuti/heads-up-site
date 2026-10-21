@@ -4,100 +4,72 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Support — Heads Up</title>
-<meta name="description" content="Support and FAQ for Heads Up, the Mac menu bar meeting reminder. Calendar access, reminder settings, meeting links, and privacy.">
+<meta name="description" content="Support and FAQ for Heads Up, the Mac menu bar meeting reminder. Calendar access, reminder settings, Auto-join, meeting links, and privacy.">
 <link rel="canonical" href="https://headsup.benvenutisoftware.com/support">
 <link rel="icon" href="./favicon.svg" type="image/svg+xml">
-<style>
-  :root { --ink:#16161a; --muted:#5b5b66; --line:#e6e6ec; --accent:#F5A21A; --bg:#ffffff; --card:#fafafb; }
-  * { box-sizing: border-box; }
-  html { -webkit-text-size-adjust: 100%; }
-  body {
-    margin: 0; background: var(--bg); color: var(--ink);
-    font: 17px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  }
-  .wrap { max-width: 720px; margin: 0 auto; padding: 72px 24px 96px; }
-  header { display: flex; align-items: center; gap: 14px; margin-bottom: 56px; }
-  .badge { width: 40px; height: 40px; border-radius: 10px;
-    background: linear-gradient(160deg, #2a2a35, #14141a); position: relative; flex: none; }
-  .badge::after { content:""; position:absolute; inset:9px; border-radius:50%;
-    border:3px solid rgba(255,255,255,.15); border-top-color: var(--accent);
-    border-right-color: var(--accent); transform: rotate(35deg); }
-  .brand { font-weight: 600; font-size: 16px; letter-spacing: .2px; }
-  .brand span { color: var(--muted); font-weight: 500; }
-  h1 { font-size: 40px; line-height: 1.15; letter-spacing: -.5px; margin: 0 0 10px; }
-  .tagline { color: var(--muted); font-size: 19px; margin: 0 0 40px; }
-  .contact { border: 1px solid var(--line); background: var(--card); border-radius: 14px;
-    padding: 24px 26px; margin: 0 0 48px; }
-  .contact h2 { margin: 0 0 6px; font-size: 20px; }
-  .contact p { margin: 0; color: var(--muted); }
-  .contact a { font-weight: 600; }
-  h2 { font-size: 21px; letter-spacing: -.2px; margin: 40px 0 6px; }
-  .q { font-weight: 600; margin: 30px 0 6px; font-size: 18px; }
-  p { margin: 0 0 14px; }
-  a { color: #C9761A; text-decoration: none; }
-  a:hover { text-decoration: underline; }
-  strong { font-weight: 600; }
-  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--line);
-    color: var(--muted); font-size: 14px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; }
-  footer a { color: var(--muted); }
-  @media (max-width: 520px) { .wrap { padding: 48px 20px 72px; } h1 { font-size: 32px; } }
-</style>
+<meta name="theme-color" content="#17162B">
+<link rel="stylesheet" href="./site.css">
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <div class="badge" aria-hidden="true"></div>
-    <div class="brand">Heads Up <span>· Benvenuti Software</span></div>
-  </header>
 
-  <h1>Support</h1>
-  <p class="tagline">Stay in flow. Never miss your next meeting.</p>
-
-  <div class="contact">
-    <h2>Get in touch</h2>
-    <p>Questions, bugs, or feedback? Email
-      <a href="mailto:support@benvenutisoftware.com">support@benvenutisoftware.com</a>
-      and we'll get back to you.</p>
+<header class="mast">
+  <div class="wrap nav">
+    <a class="brand" href="/"><img src="./press/icon.png" alt="" width="34" height="34">Heads Up</a>
+    <nav class="nav-links" aria-label="Main">
+      <a href="/#how">How it works</a>
+      <a href="/#price">Price</a>
+      <a href="./support" aria-current="page">Support</a>
+      <a class="get get-sm" href="https://apps.apple.com/app/id6794951718" target="_blank" rel="noopener">Get Heads Up</a>
+    </nav>
   </div>
+  <div class="wrap mast-body">
+    <span class="label">Support</span>
+    <h1>How can we help?</h1>
+    <p class="lede">Answers to the common questions are below. For anything else, email <a href="mailto:support@benvenutisoftware.com" style="color:#fff">support@benvenutisoftware.com</a> and you'll hear back from the developer.</p>
+  </div>
+</header>
 
-  <h2>Frequently asked questions</h2>
+<main class="wrap article">
+<dl class="qa">
+  <dt>How do I let Heads Up see my meetings?</dt>
+  <dd>On first launch, Heads Up asks for Calendar access. Choose <strong>Allow</strong>. If you missed it, open <strong>System Settings → Privacy &amp; Security → Calendars</strong> and turn on Heads Up. Access is read-only; Heads Up never changes your calendar.</dd>
 
-  <p class="q">How do I let Heads Up see my meetings?</p>
-  <p>On first launch, Heads Up asks for Calendar access — choose <strong>Allow</strong>. If you missed
-  it, open <strong>System Settings → Privacy &amp; Security → Calendars</strong> and turn on Heads Up.
-  Access is read-only; Heads Up never changes your calendar.</p>
+  <dt>Which calendars does it work with?</dt>
+  <dd>Any calendar in the macOS Calendar app, including iCloud, Google, Outlook, and Exchange accounts. Add accounts in <strong>System Settings → Internet Accounts</strong> and Heads Up sees their events.</dd>
 
-  <p class="q">Which calendars does it work with?</p>
-  <p>Any calendar that appears in the macOS Calendar app — including iCloud, Google, Outlook, and
-  Exchange accounts. Add those accounts in <strong>System Settings → Internet Accounts</strong> and
-  Heads Up will see their events.</p>
+  <dt>A meeting isn't showing up. Why?</dt>
+  <dd>Heads Up only reminds you about real meetings, so it skips events that are all-day, that you've declined, that are marked "free," or that run longer than four hours (offsites and travel blocks). Any other timed event on your calendar appears.</dd>
 
-  <p class="q">A meeting isn't showing up. Why?</p>
-  <p>Heads Up focuses on real meetings, so it skips events that are all-day, that you've declined, that
-  are marked "free," or that run longer than four hours (offsites and travel blocks). If an event is
-  timed and on your calendar, it will appear.</p>
+  <dt>How do the reminders work?</dt>
+  <dd>By default you get a reminder card five minutes before a meeting and a full-screen reminder the moment it starts. Choose which reminders fire (15, 10, 5, or 2 minutes before, and at start) in <strong>Preferences → Reminders</strong>. <strong>Esc</strong> dismisses a reminder and <strong>Return</strong> joins.</dd>
 
-  <p class="q">How do the reminders work?</p>
-  <p>By default you get a gentle card five minutes before, and a full-screen reminder the moment the
-  meeting starts. You can change which reminders fire — 15, 10, 5, 2 minutes before, and at start —
-  in <strong>Preferences → Reminders</strong>. Press <strong>Esc</strong> to dismiss any reminder.</p>
+  <dt>What does Auto-join do?</dt>
+  <dd>Press <strong>Auto-join</strong> on a reminder card and Heads Up closes the card, then opens the meeting link for you when the meeting starts. Auto-join only appears before a meeting starts; after that, Join does the same thing.</dd>
 
-  <p class="q">Which meeting links can it open?</p>
-  <p>Heads Up detects Zoom, Google Meet, Microsoft Teams, and Webex links, plus generic links, and
-  opens them with one click on <strong>Join</strong>.</p>
+  <dt>Which meeting links can it open?</dt>
+  <dd>Zoom, Google Meet, Microsoft Teams, and Webex links, plus other links in the invite. Click <strong>Join</strong> to open them.</dd>
 
-  <p class="q">How do I make it launch automatically?</p>
-  <p>Open <strong>Preferences → General</strong> and turn on <strong>Launch when I log in</strong>.</p>
+  <dt>How do I make it launch automatically?</dt>
+  <dd>Open <strong>Preferences → General</strong> and turn on <strong>Launch when I log in</strong>.</dd>
 
-  <p class="q">Does it collect my data or use the internet?</p>
-  <p>No. Heads Up reads your calendar on your Mac to show your next meeting and nothing else — no
-  account, no tracking, no data leaves your device. The only network activity is your browser opening
-  a meeting link when you click Join. See our <a href="./privacy">Privacy Policy</a>.</p>
+  <dt>Does it collect my data or use the internet?</dt>
+  <dd>No. Heads Up reads your calendar on your Mac to show your next meeting and does nothing else with it. There's no account and no tracking, and no data leaves your Mac. The only network activity is your browser opening a meeting link when you click Join. See the <a href="./privacy">privacy policy</a>.</dd>
+</dl>
+</main>
 
-  <footer>
-    <span>© 2026 Benvenuti Software</span>
-    <span><a href="./privacy">Privacy Policy</a></span>
-  </footer>
-</div>
+<footer>
+  <div class="wrap foot">
+    <span>© 2026 Benvenuti Software · <a href="mailto:support@benvenutisoftware.com">support@benvenutisoftware.com</a></span>
+    <nav aria-label="Footer">
+      <a href="./mac-meeting-reminder">Mac meeting reminder</a>
+      <a href="./time-blindness">Time blindness &amp; ADHD</a>
+      <a href="./vs-in-your-face">vs In Your Face</a>
+      <a href="./press">Press</a>
+      <a href="./support" aria-current="page">Support</a>
+      <a href="./privacy">Privacy</a>
+    </nav>
+  </div>
+</footer>
+
 </body>
 </html>
