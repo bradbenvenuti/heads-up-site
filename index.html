@@ -268,12 +268,12 @@
           <circle class="arc" id="arc" cx="120" cy="120" r="108" fill="none" stroke="url(#ringGrad)" stroke-width="10" stroke-linecap="round" stroke-dasharray="678.6" stroke-dashoffset="678.6"/>
         </svg>
         <div class="dial-face">
-          <span class="label dial-label" id="dial-label">The next half hour</span>
+          <span class="label dial-label" id="dial-label">Next meeting</span>
           <span class="dial-count" id="count">--:--</span>
           <span class="dial-until" id="until">&nbsp;</span>
         </div>
       </div>
-      <button class="try" id="try" type="button">Try a 10-second meeting</button>
+      <button class="try" id="try" type="button">Skip to the start</button>
     </div>
   </div>
 </header>
@@ -395,7 +395,7 @@
   <div class="rcard">
     <div class="rc-label">Starts in</div>
     <div class="rc-count">0:00</div>
-    <div class="rc-title" id="tk-title">Your 10-second meeting</div>
+    <div class="rc-title" id="tk-title">Design Review</div>
     <div class="rc-range" id="tk-range"></div>
     <div class="rc-actions">
       <button class="rc-btn join" id="tk-join" type="button">Join</button>
@@ -411,45 +411,42 @@
   var video = document.getElementById('promo'), play = video.nextElementSibling;
   play.addEventListener('click', function () { play.remove(); video.controls = true; video.play(); });
 
-  // Live dial: counts to the next :00 or :30, or to a 10-second demo meeting.
+  // Live dial: an example meeting counting down, as the app does. "Skip to
+  // the start" jumps it to five seconds out; at 0:00 it takes over the page.
   var arc = document.getElementById('arc'), count = document.getElementById('count'),
-      until = document.getElementById('until'), label = document.getElementById('dial-label'),
-      tryBtn = document.getElementById('try'), takeover = document.getElementById('takeover'),
-      CIRC = 678.6, demoEnd = null, opener = null;
+      until = document.getElementById('until'), tryBtn = document.getElementById('try'),
+      takeover = document.getElementById('takeover'),
+      CIRC = 678.6, LEAD = 12 * 60000, start = 0, skipping = false, opener = null;
   var timeFmt = new Intl.DateTimeFormat(undefined, { hour: 'numeric', minute: '2-digit' });
 
   function color(sec) { return sec <= 0 ? 'var(--t-red)' : sec <= 300 ? 'var(--t-orange)' : 'var(--t-yellow)'; }
   function mmss(sec) { var s = Math.max(0, Math.ceil(sec)); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); }
+  function schedule(ms) { start = Date.now() + ms; until.textContent = 'Design Review · ' + timeFmt.format(start); }
 
   function tick() {
-    var now = Date.now(), total, end;
-    if (demoEnd) {
-      total = 10; end = demoEnd;
-    } else {
-      total = 1800; end = Math.ceil((now + 1) / 1800000) * 1800000;
+    var left = (start - Date.now()) / 1000;
+    if (left <= 0) {
+      if (skipping) { skipping = false; showTakeover(); return; }
+      schedule(LEAD);   // nobody asked for the takeover; just roll on to the next one
+      left = LEAD / 1000;
     }
-    var left = (end - now) / 1000;
     count.textContent = mmss(left);
-    count.style.color = color(demoEnd ? left : Math.ceil(left));
-    arc.style.strokeDashoffset = CIRC * Math.max(0, left / total);
-    if (!demoEnd) until.textContent = 'until ' + timeFmt.format(end);
-    if (demoEnd && left <= 0) { demoEnd = null; showTakeover(); }
+    count.style.color = color(Math.ceil(left));
+    arc.style.strokeDashoffset = CIRC * Math.min(1, left / 1800);   // ring spans the last half hour
   }
 
   tryBtn.addEventListener('click', function () {
-    demoEnd = Date.now() + 10000;
-    label.textContent = 'Your meeting starts in';
-    until.textContent = 'Keep reading. It will find you.';
+    skipping = true;
+    schedule(5000);
     tryBtn.disabled = true;
     tick();
   });
 
   var note = document.getElementById('tk-note'), noteHTML = note.innerHTML;
   function showTakeover() {
-    var start = new Date();
     note.innerHTML = noteHTML;
     document.getElementById('tk-range').textContent =
-      timeFmt.format(start) + '–' + timeFmt.format(new Date(start.getTime() + 30 * 60000));
+      timeFmt.format(start) + '–' + timeFmt.format(start + 30 * 60000);
     opener = document.activeElement;
     takeover.hidden = false;
     document.body.style.overflow = 'hidden';
@@ -458,8 +455,8 @@
   function hideTakeover() {
     takeover.hidden = true;
     document.body.style.overflow = '';
-    label.textContent = 'The next half hour';
     tryBtn.disabled = false;
+    schedule(LEAD);
     (opener && opener !== document.body ? opener : tryBtn).focus();
     tick();
   }
