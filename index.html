@@ -206,6 +206,17 @@
   .rc-btn.join { background: var(--join); }
   .tk-note { max-width: 30em; text-align: center; font-size: 15px; line-height: 1.55; color: rgba(255,255,255,.8); }
   .tk-note kbd { font: 600 12px var(--mono); border: 1px solid rgba(255,255,255,.35); border-radius: 5px; padding: 1px 6px; }
+  .precard { position: fixed; z-index: 90; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(320px, calc(100% - 32px)); padding: 24px; }
+  .precard[hidden] { display: none; }
+  .precard .rc-count { font-size: 56px; color: var(--t-orange); }
+  .precard .rc-title { font-size: 16px; }
+  .precard .rc-btn { font-size: 13px; }
+  .toast {
+    position: fixed; z-index: 110; left: 50%; bottom: 28px; transform: translateX(-50%); width: max-content; max-width: calc(100% - 32px);
+    background: #262626; color: #fff; border: 1px solid rgba(255,255,255,.1); border-radius: 12px; padding: 12px 18px;
+    font-size: 15px; box-shadow: 0 12px 40px rgba(0,0,0,.4); animation: fade .25s ease-out;
+  }
+  .toast[hidden] { display: none; }
   @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
   .takeover .rcard { animation: rise .4s cubic-bezier(.2,.9,.3,1.2); }
   @keyframes rise { from { transform: scale(.94); opacity: 0; } to { transform: none; opacity: 1; } }
@@ -233,7 +244,7 @@
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     .dial .arc { transition: none; }
-    .takeover, .takeover .rcard { animation: none; }
+    .takeover, .takeover .rcard, .toast { animation: none; }
   }
 </style>
 </head>
@@ -391,6 +402,19 @@
   </div>
 </footer>
 
+<div class="rcard precard" id="precard" role="dialog" aria-labelledby="pc-title" hidden>
+  <div class="rc-label">Starts in</div>
+  <div class="rc-count" id="pc-count">0:10</div>
+  <div class="rc-title" id="pc-title">Design Review</div>
+  <div class="rc-range" id="pc-range"></div>
+  <div class="rc-actions">
+    <button class="rc-btn join" id="pc-join" type="button">Join</button>
+    <button class="rc-btn" id="pc-auto" type="button" title="Opens the meeting automatically when it starts">Auto-join</button>
+    <button class="rc-btn" id="pc-dismiss" type="button">Dismiss</button>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" hidden></div>
+
 <div class="takeover" id="takeover" role="dialog" aria-modal="true" aria-labelledby="tk-title" aria-describedby="tk-note" hidden>
   <div class="rcard">
     <div class="rc-label">Starts in</div>
@@ -411,65 +435,87 @@
   var video = document.getElementById('promo'), play = video.nextElementSibling;
   play.addEventListener('click', function () { play.remove(); video.controls = true; video.play(); });
 
-  // Live dial: an example meeting counting down, as the app does. "Skip to
-  // the start" jumps it to five seconds out; at 0:00 it takes over the page.
-  var arc = document.getElementById('arc'), count = document.getElementById('count'),
-      until = document.getElementById('until'), tryBtn = document.getElementById('try'),
-      takeover = document.getElementById('takeover'),
-      CIRC = 678.6, LEAD = 12 * 60000, start = 0, skipping = false, opener = null;
+  // Live dial: an example meeting counting down, as the app does.
+  // "Skip to the start" plays the last ten seconds the way the app would:
+  // the reminder card (Join / Auto-join / Dismiss), then, at 0:00, either
+  // the full-screen reminder or, after Auto-join, the meeting opening.
+  var $ = function (id) { return document.getElementById(id); };
+  var arc = $('arc'), count = $('count'), until = $('until'), tryBtn = $('try'),
+      precard = $('precard'), takeover = $('takeover'), toast = $('toast'), note = $('tk-note'),
+      noteHTML = note.innerHTML, CIRC = 678.6, LEAD = 12 * 60000,
+      start = 0, phase = 'idle', toastTimer = null;   // phase: idle | card | waiting | auto
   var timeFmt = new Intl.DateTimeFormat(undefined, { hour: 'numeric', minute: '2-digit' });
 
   function color(sec) { return sec <= 0 ? 'var(--t-red)' : sec <= 300 ? 'var(--t-orange)' : 'var(--t-yellow)'; }
   function mmss(sec) { var s = Math.max(0, Math.ceil(sec)); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); }
+  function range() { return timeFmt.format(start) + '\u2013' + timeFmt.format(start + 30 * 60000); }
   function schedule(ms) { start = Date.now() + ms; until.textContent = 'Design Review · ' + timeFmt.format(start); }
+
+  function say(text) {
+    toast.textContent = text; toast.hidden = false;
+    clearTimeout(toastTimer); toastTimer = setTimeout(function () { toast.hidden = true; }, 4200);
+  }
+
+  function reset() {
+    phase = 'idle'; precard.hidden = true; tryBtn.disabled = false;
+    schedule(LEAD);
+  }
 
   function tick() {
     var left = (start - Date.now()) / 1000;
     if (left <= 0) {
-      if (skipping) { skipping = false; showTakeover(); return; }
-      schedule(LEAD);   // nobody asked for the takeover; just roll on to the next one
+      if (phase === 'card' || phase === 'waiting') { precard.hidden = true; showTakeover(); return; }
+      if (phase === 'auto') { say('0:00. In the app, Design Review\'s meeting link opens now.'); reset(); tryBtn.focus(); return; }
+      schedule(LEAD);   // nobody asked for the demo; roll on to the next meeting
       left = LEAD / 1000;
     }
     count.textContent = mmss(left);
     count.style.color = color(Math.ceil(left));
+    $('pc-count').textContent = mmss(left);
     arc.style.strokeDashoffset = CIRC * Math.min(1, left / 1800);   // ring spans the last half hour
   }
 
   tryBtn.addEventListener('click', function () {
-    skipping = true;
-    schedule(5000);
-    tryBtn.disabled = true;
+    schedule(10000);
+    phase = 'card'; tryBtn.disabled = true;
+    $('pc-range').textContent = range();
+    precard.hidden = false;
+    $('pc-join').focus();
     tick();
   });
 
-  var note = document.getElementById('tk-note'), noteHTML = note.innerHTML;
+  function closeCard(next) { precard.hidden = true; phase = next; tryBtn.focus(); }
+  $('pc-join').addEventListener('click', function () {
+    say('In the app, Join opens the meeting link right away.'); reset(); tryBtn.focus();
+  });
+  $('pc-auto').addEventListener('click', function () {
+    closeCard('auto'); say('Auto-join is on. Heads Up will open the meeting when it starts.');
+  });
+  $('pc-dismiss').addEventListener('click', function () { closeCard('waiting'); });
+
   function showTakeover() {
     note.innerHTML = noteHTML;
-    document.getElementById('tk-range').textContent =
-      timeFmt.format(start) + '–' + timeFmt.format(start + 30 * 60000);
-    opener = document.activeElement;
+    $('tk-range').textContent = range();
     takeover.hidden = false;
     document.body.style.overflow = 'hidden';
-    document.getElementById('tk-join').focus();
+    $('tk-join').focus();
   }
   function hideTakeover() {
     takeover.hidden = true;
     document.body.style.overflow = '';
-    tryBtn.disabled = false;
-    schedule(LEAD);
-    (opener && opener !== document.body ? opener : tryBtn).focus();
-    tick();
+    reset(); tryBtn.focus(); tick();
   }
-  document.getElementById('tk-dismiss').addEventListener('click', hideTakeover);
-  document.getElementById('tk-join').addEventListener('click', function () {
+  $('tk-dismiss').addEventListener('click', hideTakeover);
+  $('tk-join').addEventListener('click', function () {
     note.textContent = 'In the app, that opens your Zoom, Meet, Teams, or Webex link. Here, it just closes the demo.';
     setTimeout(hideTakeover, 1800);
   });
   document.addEventListener('keydown', function (e) {
+    if (!precard.hidden && e.key === 'Escape') { closeCard('waiting'); return; }
     if (takeover.hidden) return;
     if (e.key === 'Escape') hideTakeover();
     if (e.key === 'Tab') { // keep focus on the two buttons, like a modal window
-      var a = document.getElementById('tk-join'), b = document.getElementById('tk-dismiss');
+      var a = $('tk-join'), b = $('tk-dismiss');
       if (e.shiftKey && document.activeElement === a) { e.preventDefault(); b.focus(); }
       else if (!e.shiftKey && document.activeElement === b) { e.preventDefault(); a.focus(); }
     }
