@@ -7,6 +7,7 @@
 <meta name="description" content="Heads Up counts down to your next meeting in your Mac's menu bar and takes over your screen the moment it starts. $19.99 once. No account, no tracking.">
 <link rel="canonical" href="https://headsup.benvenutisoftware.com/">
 <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#17162B">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Heads Up">
 <meta property="og:title" content="Heads Up — Meeting Reminders in Your Mac Menu Bar">
@@ -45,472 +46,441 @@
 }
 </script>
 <style>
+  /* Tokens. The three countdown colours are the app's own: yellow while more
+     than five minutes remain, orange inside five, red at the start. They mean
+     the same thing everywhere on this page. */
   :root {
-    --ink:#16161a; --muted:#5b5b66; --line:#e6e6ec; --accent:#F5A21A;
-    --bg:#ffffff; --card:#fafafb; --link:#C9761A;
-    --amber:#FFA829; --coral:#FF4A66; --join:#0A82FF;
+    --dusk: #17162B;  --dusk-2: #201E3A;  --night: #0E0D18;
+    --paper: #F5F5F7; --white: #FFFFFF;   --ink: #16161A; --muted: #5E5E6A; --line: #E3E3E9;
+    --amber: #FFA829; --coral: #FF4A66;   --join: #0A84FF;
+    --t-yellow: #FFD60A; --t-orange: #FF9F0A; --t-red: #FF453A;
+    --on-dark: rgba(255,255,255,.92); --on-dark-2: rgba(255,255,255,.62); --on-dark-3: rgba(255,255,255,.14);
+    --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+    --gutter: clamp(20px, 5vw, 72px);
   }
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
-  body {
-    margin: 0; background: var(--bg); color: var(--ink);
-    font: 17px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  }
-  a { color: var(--link); text-decoration: none; }
-  a:hover { text-decoration: underline; }
-  h1, h2 { margin: 0; line-height: 1.15; }
-  p { margin: 0; }
+  body { margin: 0; background: var(--white); color: var(--ink); font: 17px/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
+  a { color: inherit; }
+  img { display: block; max-width: 100%; height: auto; }
+  h1, h2, h3, p { margin: 0; }
+  :focus-visible { outline: 3px solid var(--amber); outline-offset: 3px; border-radius: 6px; }
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 0 var(--gutter); }
+  .label { font: 600 12px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
 
-  .cta {
-    display: inline-flex; align-items: center; gap: 10px;
-    background: linear-gradient(135deg, var(--amber), var(--coral));
-    color: #fff; font-weight: 600; border-radius: 999px; text-decoration: none;
+  .get {
+    display: inline-flex; align-items: center; gap: 10px; text-decoration: none;
+    background: var(--amber); color: #1A1206; font-weight: 650; font-size: 17px;
+    padding: 15px 26px; border-radius: 999px; transition: background .15s;
   }
-  .cta:hover { text-decoration: none; filter: brightness(1.06); }
-  .cta.large { font-size: 17px; padding: 16px 28px; box-shadow: 0 12px 32px rgba(255,74,102,0.3); }
-  .cta.small { font-size: 15px; padding: 10px 20px; }
+  .get:hover { background: #FFB64A; }
+  .get-sm { font-size: 14px; padding: 9px 18px; }
 
   /* ---------- Hero ---------- */
-  .hero {
-    background: linear-gradient(165deg, #23223A 0%, #16151F 55%, #0F0F16 100%);
-    color: #fff; padding-bottom: 96px; overflow: hidden;
-  }
-  nav {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 24px 64px; gap: 16px;
-  }
-  .brand { display: flex; align-items: center; gap: 14px; font-weight: 600; font-size: 17px; letter-spacing: .2px; }
-  .badge {
-    width: 40px; height: 40px; border-radius: 10px; flex: none;
-    background: linear-gradient(160deg, #2a2a35, #14141a);
-    border: 1px solid rgba(255,255,255,.08);
-    display: flex; align-items: center; justify-content: center;
-  }
-  .nav-links { display: flex; align-items: center; gap: 32px; }
-  .nav-links a { color: rgba(255,255,255,.72); font-size: 15px; font-weight: 500; }
-  .nav-links a:hover { color: #fff; text-decoration: none; }
+  .hero { background: radial-gradient(120% 90% at 78% 30%, var(--dusk-2) 0%, var(--dusk) 48%, var(--night) 100%); color: var(--on-dark); }
+  .nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-top: 22px; padding-bottom: 22px; }
+  .brand { display: flex; align-items: center; gap: 12px; font-weight: 650; font-size: 17px; text-decoration: none; color: #fff; }
+  .brand img { width: 34px; height: 34px; border-radius: 8px; }
+  .nav-links { display: flex; align-items: center; gap: 30px; font-size: 15px; }
+  .nav-links a:not(.get) { color: var(--on-dark-2); text-decoration: none; }
+  .nav-links a:not(.get):hover { color: #fff; }
 
   .hero-grid {
-    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 64px; align-items: center; padding: 72px 96px 0;
-    max-width: 1440px; margin: 0 auto;
+    display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: 48px; align-items: center;
+    padding-top: clamp(40px, 7vw, 96px); padding-bottom: clamp(56px, 8vw, 112px);
   }
-  .hero-copy { display: flex; flex-direction: column; gap: 28px; align-items: flex-start; }
-  .eyebrow {
-    display: inline-flex; align-items: center; gap: 8px;
-    border: 1px solid rgba(255,255,255,.16); border-radius: 999px; padding: 6px 14px;
-    font-size: 13px; font-weight: 600; letter-spacing: .4px; color: rgba(255,255,255,.75);
-  }
-  .hero h1 { font-size: clamp(38px, 4.5vw, 64px); letter-spacing: -1.5px; font-weight: 700; line-height: 1.06; }
-  .hero-sub { font-size: 20px; line-height: 1.6; color: rgba(255,255,255,.72); max-width: 480px; }
-  .hero-cta { display: flex; flex-direction: column; gap: 12px; align-items: flex-start; }
-  .fine { font-size: 14px; color: rgba(255,255,255,.55); }
+  .hero h1 { font-size: clamp(44px, 6.2vw, 86px); line-height: .98; letter-spacing: -.04em; font-weight: 750; color: #fff; }
+  .hero-sub { margin-top: 26px; font-size: clamp(18px, 1.6vw, 21px); line-height: 1.55; color: var(--on-dark-2); max-width: 30em; }
+  .hero-cta { margin-top: 36px; display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; }
+  .hero-cta .fine { font: 500 13px/1.4 var(--mono); color: var(--on-dark-2); }
 
-  .hero-visual { position: relative; display: flex; flex-direction: column; align-items: flex-end; }
-  .hero-visual::before {
-    content: ""; position: absolute; top: -60px; right: -40px; width: 480px; height: 480px;
-    background: radial-gradient(circle, rgba(255,168,41,.14) 0%, rgba(255,74,102,.06) 45%, rgba(0,0,0,0) 70%);
-    pointer-events: none;
+  /* The signature: a live countdown ring. */
+  .clock { display: flex; flex-direction: column; align-items: center; gap: 22px; }
+  .dial { position: relative; width: min(400px, 82vw); aspect-ratio: 1; }
+  .dial svg { width: 100%; height: 100%; transform: rotate(-90deg); overflow: visible; }
+  .dial .track { stroke: var(--on-dark-3); }
+  .dial .arc { transition: stroke-dashoffset .25s linear; filter: drop-shadow(0 0 18px rgba(255,168,41,.35)); }
+  .dial-face { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+  .dial-label { color: var(--on-dark-2); }
+  .dial-count {
+    font-size: clamp(64px, 8vw, 104px); font-weight: 100; line-height: 1.05; letter-spacing: -.02em;
+    font-variant-numeric: tabular-nums; color: var(--t-yellow); margin: 6px 0 4px;
   }
-  .menubar {
-    position: relative; width: 100%; max-width: 560px;
-    background: rgba(30,30,40,.92); border: 1px solid rgba(255,255,255,.10); border-radius: 12px;
-    padding: 10px 18px; display: flex; justify-content: flex-end; align-items: center; gap: 18px;
-    box-shadow: 0 24px 60px rgba(0,0,0,.45); font-size: 14px;
+  .dial-until { font: 500 15px/1.4 var(--mono); color: var(--on-dark-2); }
+  .try {
+    font: 600 15px/1 var(--sans); color: #fff; background: transparent; cursor: pointer;
+    border: 1px solid rgba(255,255,255,.28); border-radius: 999px; padding: 12px 20px;
   }
-  .menubar .countdown { display: flex; align-items: center; gap: 7px; font-weight: 600; color: var(--amber); }
-  .menubar .clock { font-weight: 500; color: rgba(255,255,255,.85); }
-  .dropdown {
-    position: relative; width: 330px; max-width: 100%; margin: 8px 56px 0 0;
-    background: rgba(44,44,54,.97); border: 1px solid rgba(255,255,255,.10); border-radius: 14px;
-    padding: 16px; display: flex; flex-direction: column; gap: 12px;
-    box-shadow: 0 32px 80px rgba(0,0,0,.55); font-size: 14px;
-  }
-  .dd-label { font-size: 11px; font-weight: 600; letter-spacing: .6px; color: rgba(255,255,255,.45); }
-  .dd-next { display: flex; flex-direction: column; gap: 3px; }
-  .dd-next .title { font-size: 16px; font-weight: 600; color: #fff; }
-  .dd-next .when { color: rgba(255,255,255,.55); }
-  .dd-join { background: var(--join); color: #fff; font-weight: 600; text-align: center; border-radius: 8px; padding: 9px 0; }
-  .dd-rule { height: 1px; background: rgba(255,255,255,.10); }
-  .dd-list { display: flex; flex-direction: column; gap: 8px; }
-  .dd-row { display: flex; gap: 14px; color: rgba(255,255,255,.85); }
-  .dd-row .time { width: 44px; color: rgba(255,255,255,.5); font-variant-numeric: tabular-nums; }
-  .dd-menu { display: flex; flex-direction: column; gap: 7px; color: rgba(255,255,255,.75); }
+  .try:hover { border-color: #fff; }
+  .try[disabled] { opacity: .45; cursor: default; }
 
-  /* ---------- Promo video ---------- */
-  .hero-video { max-width: 1040px; margin: 96px auto 0; padding: 0 24px; text-align: center; }
-  .hero-video .label { font-size: 13px; font-weight: 700; letter-spacing: 1px; color: var(--amber); margin-bottom: 18px; }
+  /* ---------- Video ---------- */
+  .film { background: var(--night); padding: 0 0 clamp(64px, 9vw, 120px); }
+  .film .label { color: var(--amber); text-align: center; padding-top: clamp(48px, 6vw, 72px); margin-bottom: 20px; }
   .video-frame {
-    position: relative; border-radius: 18px; overflow: hidden; aspect-ratio: 16 / 9; background: #0F0F16;
-    border: 1px solid rgba(255,255,255,.10); box-shadow: 0 32px 90px rgba(0,0,0,.55);
+    position: relative; max-width: 1040px; margin: 0 auto; border-radius: 18px; overflow: hidden; aspect-ratio: 16 / 9;
+    background: var(--dusk); border: 1px solid rgba(255,255,255,.10); box-shadow: 0 30px 90px rgba(0,0,0,.6);
   }
   .video-frame video { display: block; width: 100%; height: 100%; }
-  .play {
-    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-    background: rgba(10,10,16,.18); border: 0; cursor: pointer; padding: 0;
-  }
-  .play span {
-    width: 88px; height: 88px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    background: linear-gradient(135deg, var(--amber), var(--coral)); box-shadow: 0 14px 40px rgba(255,74,102,.45);
-    transition: transform .15s ease;
-  }
-  .play:hover span { transform: scale(1.07); }
+  .play { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(8,8,14,.2); border: 0; padding: 0; cursor: pointer; }
+  .play span { width: 84px; height: 84px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--amber); box-shadow: 0 14px 40px rgba(0,0,0,.45); transition: transform .15s; }
+  .play:hover span { transform: scale(1.06); }
+  .play:focus-visible { outline: none; }
   .play:focus-visible span { outline: 3px solid #fff; outline-offset: 4px; }
 
-  /* ---------- Feature rows ---------- */
-  .feature {
-    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 96px; align-items: center; padding: 112px 120px;
-    max-width: 1440px; margin: 0 auto;
-  }
-  .feature.alt-bg { max-width: none; }
-  .alt-bg { background: var(--card); }
-  .feature-wrap { padding: 112px 120px; }
-  .alt-bg .feature-inner {
-    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 96px; align-items: center; max-width: 1440px; margin: 0 auto;
-  }
-  .kicker { font-size: 13px; font-weight: 700; letter-spacing: 1px; color: var(--link); }
-  .feature h2, .band h2, .pricing h2 { font-size: clamp(28px, 3vw, 40px); letter-spacing: -.5px; }
-  .feature-copy { display: flex; flex-direction: column; gap: 16px; }
-  .feature-copy p { font-size: 18px; line-height: 1.65; color: var(--muted); }
-  .feature-visual { display: flex; justify-content: center; }
+  /* ---------- Timeline: what happens before a meeting ---------- */
+  .timeline { background: var(--paper); padding: clamp(72px, 10vw, 136px) 0; }
+  .section-head { max-width: 40em; margin-bottom: clamp(40px, 6vw, 72px); }
+  .section-head h2 { font-size: clamp(32px, 4vw, 52px); line-height: 1.04; letter-spacing: -.03em; font-weight: 750; }
+  .section-head p { margin-top: 16px; font-size: 19px; color: var(--muted); }
+  .stops { list-style: none; margin: 0; padding: 0; position: relative; }
+  .stops::before { content: ""; position: absolute; left: 7px; top: 10px; bottom: 10px; width: 2px; background: linear-gradient(var(--t-yellow), var(--t-orange) 55%, var(--t-red)); border-radius: 2px; }
+  .stop { position: relative; display: grid; grid-template-columns: 200px minmax(0, 1fr) minmax(0, 1.25fr); gap: 32px 48px; align-items: start; padding: 0 0 clamp(56px, 7vw, 96px) 44px; }
+  .stop:last-child { padding-bottom: 0; }
+  .stop::before { content: ""; position: absolute; left: 0; top: 4px; width: 16px; height: 16px; border-radius: 50%; background: var(--dot); box-shadow: 0 0 0 5px var(--paper); }
+  .stop.y { --dot: var(--t-yellow); } .stop.o { --dot: var(--t-orange); } .stop.r { --dot: var(--t-red); }
+  .when { padding-top: 2px; }
+  .when .t { font: 600 26px/1 var(--mono); letter-spacing: -.02em; color: var(--ink); }
+  .when .label { display: block; margin-top: 10px; color: var(--muted); line-height: 1.5; }
+  .stop h3 { font-size: 24px; line-height: 1.2; letter-spacing: -.015em; font-weight: 700; }
+  .stop p { margin-top: 12px; color: var(--muted); font-size: 17px; }
+  .stop p strong { color: var(--ink); font-weight: 600; }
+  .shot { border-radius: 14px; overflow: hidden; background: var(--dusk); box-shadow: 0 1px 0 rgba(0,0,0,.04), 0 18px 50px rgba(23,22,43,.18); }
+  .shot.tall { max-width: min(300px, 100%); }
+  .stop.r .shot { grid-column: 2 / -1; }
+  .shot.card { max-width: min(420px, 100%); border-radius: 22px; }
 
-  .takeover-stage {
-    background: linear-gradient(165deg, #23223A, #12121C); border-radius: 20px;
-    padding: 56px 48px; display: flex; justify-content: center;
-    box-shadow: 0 24px 64px rgba(18,18,28,.25); width: 100%;
-  }
-  .takeover-card {
-    background: rgba(245,245,248,.97); border-radius: 18px; padding: 28px 36px;
-    display: flex; flex-direction: column; align-items: center; gap: 4px;
-    box-shadow: 0 24px 60px rgba(0,0,0,.5); width: 320px; max-width: 100%;
-  }
-  .takeover-card .starts { font-size: 12px; font-weight: 600; letter-spacing: 2px; color: var(--muted); }
-  .takeover-card .count { font-size: 72px; font-weight: 200; color: #F58411; font-variant-numeric: tabular-nums; line-height: 1.1; }
-  .takeover-card .meeting { font-size: 22px; font-weight: 600; }
-  .takeover-card .when { font-size: 14px; color: var(--muted); }
-  .takeover-card .actions { display: flex; gap: 8px; margin-top: 18px; flex-wrap: wrap; justify-content: center; }
-  .pill { font-size: 14px; border-radius: 9px; padding: 9px 13px; }
-  .pill.join { background: var(--join); color: #fff; font-weight: 600; padding: 9px 20px; }
-  .pill.gray { background: var(--line); color: var(--ink); font-weight: 500; }
+  /* ---------- Details ---------- */
+  .details { padding: clamp(72px, 10vw, 128px) 0; }
+  .facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 48px; margin: 0; }
+  .fact { border-top: 1px solid var(--line); padding: 22px 0 34px; }
+  .fact dt { font-weight: 650; font-size: 17px; }
+  .fact dd { margin: 6px 0 0; color: var(--muted); font-size: 16px; line-height: 1.55; }
 
-  .join-demo { display: flex; flex-direction: column; gap: 14px; align-items: center; width: 100%; }
-  .join-card {
-    width: 100%; max-width: 420px; background: var(--card); border: 1px solid var(--line);
-    border-radius: 16px; padding: 20px 24px; display: flex; justify-content: space-between;
-    align-items: center; gap: 16px; box-shadow: 0 8px 28px rgba(22,22,26,.06);
-  }
-  .join-card .title { font-size: 16px; font-weight: 600; }
-  .join-card .when { font-size: 13px; color: var(--muted); }
-  .join-card .btn { background: var(--join); color: #fff; font-size: 14px; font-weight: 600; padding: 9px 24px; border-radius: 999px; flex: none; }
-  .chips { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
-  .chip {
-    display: flex; align-items: center; gap: 7px; border: 1px solid var(--line);
-    border-radius: 999px; padding: 7px 14px; font-size: 13px; font-weight: 500; color: var(--muted);
-  }
+  /* ---------- Price + privacy ---------- */
+  .deal { background: var(--dusk); color: var(--on-dark); padding: clamp(72px, 10vw, 128px) 0; }
+  .deal-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 64px; align-items: end; }
+  .price { font-size: clamp(96px, 14vw, 184px); font-weight: 100; line-height: .9; letter-spacing: -.04em; font-variant-numeric: tabular-nums; color: #fff; }
+  .price small { font-size: .26em; font-weight: 500; letter-spacing: 0; color: var(--amber); margin-left: .2em; }
+  .deal h2 { margin-top: 26px; font-size: clamp(26px, 2.6vw, 34px); letter-spacing: -.02em; line-height: 1.15; font-weight: 700; color: #fff; }
+  .deal p { margin-top: 14px; color: var(--on-dark-2); font-size: 18px; max-width: 32em; }
+  .deal .get { margin-top: 30px; }
+  .deal .compare { display: inline-block; margin-top: 18px; font: 500 14px/1.4 var(--mono); color: var(--on-dark-2); }
+  .deal .compare:hover { color: #fff; }
+  .private { border-left: 1px solid var(--on-dark-3); padding-left: 40px; }
+  .private ul { list-style: none; margin: 22px 0 0; padding: 0; }
+  .private li { display: flex; gap: 12px; padding: 10px 0; border-top: 1px solid var(--on-dark-3); font-size: 16px; color: var(--on-dark); }
+  .private li::before { content: "—"; color: var(--amber); }
 
-  /* ---------- Capability trio ---------- */
-  .trio {
-    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px;
-    padding: 96px 120px; max-width: 1440px; margin: 0 auto;
-  }
-  .trio-card {
-    background: var(--bg); border: 1px solid var(--line); border-radius: 14px;
-    padding: 28px; display: flex; flex-direction: column; gap: 10px;
-  }
-  .trio-card .t { font-size: 17px; font-weight: 600; }
-  .trio-card p { font-size: 15px; line-height: 1.6; color: var(--muted); }
+  /* ---------- Note from the developer ---------- */
+  .note { padding: clamp(72px, 9vw, 112px) 0; }
+  .note blockquote { margin: 0 auto; max-width: 40em; }
+  .note p { font-size: clamp(19px, 1.8vw, 22px); line-height: 1.6; letter-spacing: -.005em; }
+  .note cite { display: block; margin-top: 20px; font: normal 500 14px/1.4 var(--mono); color: var(--muted); }
 
-  /* ---------- Privacy band ---------- */
-  .band {
-    background: linear-gradient(165deg, #1C1B2B, #0F0F16); color: #fff;
-    padding: 104px 24px; display: flex; flex-direction: column; gap: 40px;
-    align-items: center; text-align: center;
-  }
-  .band-head { display: flex; flex-direction: column; gap: 14px; align-items: center; }
-  .band p { font-size: 18px; line-height: 1.65; color: rgba(255,255,255,.68); max-width: 640px; }
-  .band-points { display: flex; gap: 24px 56px; flex-wrap: wrap; justify-content: center; }
-  .point { display: flex; align-items: center; gap: 10px; font-size: 16px; font-weight: 500; color: rgba(255,255,255,.85); }
+  footer { border-top: 1px solid var(--line); }
+  .foot { display: flex; justify-content: space-between; gap: 16px 32px; flex-wrap: wrap; padding-top: 28px; padding-bottom: 36px; font-size: 14px; color: var(--muted); }
+  .foot nav { display: flex; gap: 10px 24px; flex-wrap: wrap; }
+  .foot a { text-decoration: none; }
+  .foot a:hover { color: var(--ink); }
 
-  /* ---------- Pricing ---------- */
-  .pricing {
-    padding: 112px 24px; display: flex; flex-direction: column; align-items: center;
-    gap: 24px; text-align: center;
+  /* ---------- The takeover demo (a faithful copy of the app's at-start reminder) ---------- */
+  .takeover {
+    position: fixed; inset: 0; z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 28px;
+    padding: 24px; background: rgba(6,6,12,.62); -webkit-backdrop-filter: blur(18px) saturate(1.2); backdrop-filter: blur(18px) saturate(1.2);
+    animation: fade .35s ease-out;
   }
-  .price { font-size: clamp(56px, 6vw, 76px); font-weight: 700; letter-spacing: -2px; line-height: 1; }
-  .pricing p { font-size: 18px; line-height: 1.65; color: var(--muted); max-width: 460px; }
-  .pricing .fine { color: var(--muted); }
-
-  /* ---------- Footer ---------- */
-  footer {
-    border-top: 1px solid var(--line); padding: 32px 64px;
-    display: flex; justify-content: space-between; align-items: center; gap: 12px;
-    flex-wrap: wrap; color: var(--muted); font-size: 14px;
+  .takeover[hidden] { display: none; }
+  .rcard {
+    width: min(380px, 100%); padding: 32px; border-radius: 20px; text-align: center; color: #fff;
+    background: #262626; border: 1px solid rgba(255,255,255,.08); box-shadow: 0 16px 68px rgba(0,0,0,.45);
+    font-family: var(--sans);
   }
-  footer .links { display: flex; gap: 28px; flex-wrap: wrap; }
-  footer a { color: var(--muted); }
+  .rc-label { font-size: 11px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: rgba(255,255,255,.55); }
+  .rc-count { font-size: 76px; font-weight: 100; line-height: 1.1; font-variant-numeric: tabular-nums; color: var(--t-red); margin-top: 2px; }
+  .rc-title { margin-top: 6px; font-size: 20px; font-weight: 600; }
+  .rc-range { margin-top: 2px; font-size: 12px; color: rgba(255,255,255,.55); }
+  .rc-actions { display: flex; gap: 8px; margin-top: 18px; }
+  .rc-btn { flex: 1; font: 500 14px/1 var(--sans); color: #fff; background: rgba(255,255,255,.12); border: 0; border-radius: 999px; padding: 9px 0; cursor: pointer; }
+  .rc-btn.join { background: var(--join); }
+  .tk-note { max-width: 30em; text-align: center; font-size: 15px; line-height: 1.55; color: rgba(255,255,255,.8); }
+  .tk-note kbd { font: 600 12px var(--mono); border: 1px solid rgba(255,255,255,.35); border-radius: 5px; padding: 1px 6px; }
+  @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+  .takeover .rcard { animation: rise .4s cubic-bezier(.2,.9,.3,1.2); }
+  @keyframes rise { from { transform: scale(.94); opacity: 0; } to { transform: none; opacity: 1; } }
 
   /* ---------- Responsive ---------- */
-  @media (max-width: 960px) {
-    nav { padding: 18px 20px; }
-    .nav-links { gap: 20px; }
-    .nav-links a:not(.cta) { display: none; }
-    .hero-grid { grid-template-columns: 1fr; padding: 40px 24px 0; gap: 48px; text-align: center; }
-    .hero-copy, .hero-cta { align-items: center; }
-    .hero-visual { align-items: center; }
-    .hero-visual::before { display: none; }
-    .hero-video { margin-top: 64px; }
-    .play span { width: 68px; height: 68px; }
-    .dropdown { margin-right: 0; }
-    .feature, .alt-bg .feature-inner { grid-template-columns: 1fr; gap: 40px; text-align: center; padding: 64px 24px; }
-    .alt-bg .feature-inner { padding: 0; }
-    .feature-wrap { padding: 64px 24px; }
-    .takeover-stage { padding: 32px 20px; }
-    .feature-copy { align-items: center; }
-    .feature.flip .feature-visual { order: -1; }
-    .trio { grid-template-columns: 1fr; padding: 64px 24px; }
-    .band { padding: 64px 24px; }
-    .pricing { padding: 64px 24px; }
-    footer { justify-content: center; text-align: center; padding: 24px; flex-direction: column; }
+  @media (max-width: 1000px) {
+    .stop { grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); }
+    .when { grid-column: 1 / -1; display: flex; align-items: baseline; gap: 16px; }
+    .when .label { margin-top: 0; }
+    .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 760px) {
+    .nav-links a:not(.get) { display: none; }
+    .hero-grid { grid-template-columns: 1fr; text-align: left; }
+    .clock { order: -1; }
+    .dial { width: min(300px, 78vw); }
+    .stop { grid-template-columns: minmax(0, 1fr); gap: 18px; padding-left: 36px; }
+    .stop.r .shot { grid-column: auto; }
+    .when { flex-direction: column; gap: 8px; }
+    .facts { grid-template-columns: 1fr; }
+    .deal-grid { grid-template-columns: 1fr; gap: 48px; }
+    .private { border-left: 0; padding-left: 0; }
+    .play span { width: 64px; height: 64px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .dial .arc { transition: none; }
+    .takeover, .takeover .rcard { animation: none; }
   }
 </style>
 </head>
 <body>
 
 <header class="hero">
-  <nav>
-    <div class="brand">
-      <div class="badge" aria-hidden="true">
-        <svg width="22" height="22" viewBox="0 0 22 22">
-          <defs><linearGradient id="ringNav" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#FFA829"/><stop offset="1" stop-color="#FF4A66"/></linearGradient></defs>
-          <circle cx="11" cy="11" r="8" stroke="rgba(255,255,255,0.16)" stroke-width="3" fill="none"/>
-          <circle cx="11" cy="11" r="8" stroke="url(#ringNav)" stroke-width="3" fill="none" stroke-linecap="round" stroke-dasharray="36 51" transform="rotate(-90 11 11)"/>
-          <circle cx="11" cy="3" r="1.6" fill="#fff"/>
-        </svg>
-      </div>
-      Heads Up
-    </div>
-    <div class="nav-links">
-      <a href="#features">Features</a>
-      <a href="#pricing">Pricing</a>
+  <div class="wrap nav">
+    <a class="brand" href="/"><img src="./press/icon.png" alt="" width="34" height="34">Heads Up</a>
+    <nav class="nav-links" aria-label="Main">
+      <a href="#how">How it works</a>
+      <a href="#price">Price</a>
       <a href="./support">Support</a>
-      <a class="cta small" href="https://apps.apple.com/app/id6794951718" target="_blank" rel="noopener">Get the app</a>
-    </div>
-  </nav>
-
-  <div class="hero-grid">
-    <div class="hero-copy">
-      <div class="eyebrow">
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#F5A21A" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="8" cy="8" r="6"/><path d="M8 4.5 V8 l2.5 1.5"/></svg>
-        FOR YOUR MAC MENU BAR
-      </div>
-      <h1>Never miss your next meeting.</h1>
-      <p class="hero-sub">Heads Up lives in your Mac's menu bar, counts down to your next meeting, and takes over your screen the moment it starts — so you stay in flow without watching the clock.</p>
-      <div class="hero-cta">
-        <a class="cta large" href="https://apps.apple.com/app/id6794951718" target="_blank" rel="noopener">
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 2 v9"/><path d="M5.5 8 L9 11.5 L12.5 8"/><path d="M3 12.5 V14 a1.5 1.5 0 0 0 1.5 1.5 h9 a1.5 1.5 0 0 0 1.5 -1.5 v-1.5"/></svg>
-          Download on the Mac App Store
-        </a>
-        <span class="fine">$19.99 · one-time purchase · macOS 13 or later</span>
-      </div>
-    </div>
-
-    <div class="hero-visual" aria-hidden="true">
-      <div class="menubar">
-        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="rgba(255,255,255,0.75)" stroke-width="1.4" stroke-linecap="round"><path d="M2 11 C2 8 4 6.5 8 6.5 C12 6.5 14 8 14 11"/><path d="M4.5 9 C4.5 7.5 6 6.9 8 6.9"/><circle cx="8" cy="12" r="1" fill="rgba(255,255,255,0.75)" stroke="none"/></svg>
-        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="rgba(255,255,255,0.75)" stroke-width="1.4" stroke-linecap="round"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5 L14 14"/></svg>
-        <span class="countdown">
-          <svg width="20" height="20" viewBox="0 0 22 22">
-            <defs><linearGradient id="ringBar" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#FFA829"/><stop offset="1" stop-color="#FF4A66"/></linearGradient></defs>
-            <circle cx="11" cy="11" r="8" stroke="rgba(255,255,255,0.18)" stroke-width="3.5" fill="none"/>
-            <circle cx="11" cy="11" r="8" stroke="url(#ringBar)" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-dasharray="30 51" transform="rotate(-90 11 11)"/>
-          </svg>
-          12m
-        </span>
-        <span class="clock">Tue 10:48</span>
-      </div>
-      <div class="dropdown">
-        <div class="dd-next">
-          <span class="dd-label">NEXT MEETING</span>
-          <span class="title">Engineering Sync</span>
-          <span class="when">Starts in 12 minutes</span>
-        </div>
-        <div class="dd-join">Join</div>
-        <div class="dd-rule"></div>
-        <div class="dd-list">
-          <span class="dd-label">TODAY'S MEETINGS</span>
-          <div class="dd-row"><span class="time">11:00</span><span>Product Review</span></div>
-          <div class="dd-row"><span class="time">2:00</span><span>Customer Call</span></div>
-          <div class="dd-row"><span class="time">4:30</span><span>Design 1:1</span></div>
-        </div>
-        <div class="dd-rule"></div>
-        <div class="dd-menu">
-          <span>Preferences…</span>
-          <span>Quit Heads Up</span>
-        </div>
-      </div>
-    </div>
+      <a class="get get-sm" href="https://apps.apple.com/app/id6794951718" target="_blank" rel="noopener">Get Heads Up</a>
+    </nav>
   </div>
 
-  <div class="hero-video">
-    <div class="label">SEE IT IN ACTION · 29 SEC</div>
+  <div class="wrap hero-grid">
+    <div>
+      <h1>Never miss your next meeting.</h1>
+      <p class="hero-sub">Heads Up counts down to your next meeting in your Mac's menu bar. When the meeting starts, it takes over your screen until you join or dismiss it.</p>
+      <div class="hero-cta">
+        <a class="get" href="https://apps.apple.com/app/id6794951718" target="_blank" rel="noopener">Get it on the Mac App Store</a>
+        <span class="fine">$19.99 once · macOS 13 or later</span>
+      </div>
+    </div>
+
+    <div class="clock">
+      <div class="dial" role="timer" aria-live="off" aria-labelledby="dial-label">
+        <svg viewBox="0 0 240 240" aria-hidden="true">
+          <defs><linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#FFA829"/><stop offset="1" stop-color="#FF4A66"/></linearGradient></defs>
+          <circle class="track" cx="120" cy="120" r="108" fill="none" stroke-width="10"/>
+          <circle class="arc" id="arc" cx="120" cy="120" r="108" fill="none" stroke="url(#ringGrad)" stroke-width="10" stroke-linecap="round" stroke-dasharray="678.6" stroke-dashoffset="678.6"/>
+        </svg>
+        <div class="dial-face">
+          <span class="label dial-label" id="dial-label">The next half hour</span>
+          <span class="dial-count" id="count">--:--</span>
+          <span class="dial-until" id="until">&nbsp;</span>
+        </div>
+      </div>
+      <button class="try" id="try" type="button">Try a 10-second meeting</button>
+    </div>
+  </div>
+</header>
+
+<section class="film" aria-labelledby="film-label">
+  <div class="wrap">
+    <div class="label" id="film-label">Watch the 29-second tour</div>
     <div class="video-frame">
       <video id="promo" src="./video/promo.mp4" poster="./video/promo-poster.jpg" preload="none" playsinline
-             aria-label="Heads Up promo video: menu bar countdown, full-screen reminder, and Auto-join"></video>
-      <button class="play" type="button" aria-label="Play the Heads Up video">
-        <span><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path d="M10 6.5 L24 15 L10 23.5 Z" fill="#fff"/></svg></span>
+             aria-label="Heads Up tour: menu bar countdown, full-screen reminder, and Auto-join"></video>
+      <button class="play" type="button" aria-label="Play the tour">
+        <span><svg width="28" height="28" viewBox="0 0 30 30" aria-hidden="true"><path d="M10 6.5 L24 15 L10 23.5 Z" fill="#1A1206"/></svg></span>
       </button>
     </div>
   </div>
-  <script>
-    (function () {
-      var v = document.getElementById('promo'), b = v.nextElementSibling;
-      b.addEventListener('click', function () { b.remove(); v.controls = true; v.play(); });
-    })();
-  </script>
-</header>
+</section>
 
 <main>
-  <!-- Feature 1: Radar -->
-  <section class="feature" id="features">
-    <div class="feature-visual" aria-hidden="true">
-      <svg width="260" height="260" viewBox="0 0 260 260">
-        <defs><linearGradient id="ringBig" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#FFA829"/><stop offset="1" stop-color="#FF4A66"/></linearGradient></defs>
-        <circle cx="130" cy="130" r="104" stroke="#e6e6ec" stroke-width="18" fill="none"/>
-        <circle cx="130" cy="130" r="104" stroke="url(#ringBig)" stroke-width="18" fill="none" stroke-linecap="round" stroke-dasharray="470 654" transform="rotate(-90 130 130)"/>
-        <text x="130" y="122" text-anchor="middle" font-size="52" font-weight="300" fill="#16161a" font-family="-apple-system, BlinkMacSystemFont, sans-serif">12m</text>
-        <text x="130" y="156" text-anchor="middle" font-size="16" font-weight="600" fill="#5b5b66" font-family="-apple-system, BlinkMacSystemFont, sans-serif" letter-spacing="1">TO GO</text>
-      </svg>
-    </div>
-    <div class="feature-copy">
-      <span class="kicker">THE MEETING RADAR</span>
-      <h2>Your day, at a glance.</h2>
-      <p>A quiet ring in your menu bar fills as your next meeting approaches. One glance tells you how long you have — no clock math, no anxious tab-switching to your calendar.</p>
-      <p>Open the dropdown for the full day: what's next, what's later, and how much room you have in between.</p>
-    </div>
-  </section>
-
-  <!-- Feature 2: Takeover -->
-  <section class="alt-bg feature-wrap">
-    <div class="feature-inner">
-      <div class="feature-copy">
-        <span class="kicker">REMINDERS THAT WORK</span>
-        <h2>Impossible to miss.</h2>
-        <p>A gentle card slides in before the meeting. When it starts, Heads Up takes over your whole screen — every monitor, if you like — until you join or dismiss. Not ready yet? Hit Auto-join and it opens the meeting for you the moment it starts.</p>
-        <p>Choose exactly which reminders fire: 15, 10, 5, or 2 minutes before, and at start. Press Esc to dismiss any of them.</p>
+  <section class="timeline" id="how" aria-labelledby="how-title">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="how-title">What happens before each meeting</h2>
+        <p>Heads Up reads the calendars already on your Mac. You don't set anything up per meeting.</p>
       </div>
-      <div class="feature-visual" aria-hidden="true">
-        <div class="takeover-stage">
-          <div class="takeover-card">
-            <span class="starts">STARTS IN</span>
-            <span class="count">1:47</span>
-            <span class="meeting">Engineering Weekly</span>
-            <span class="when">11:00 – 11:30 AM</span>
-            <div class="actions">
-              <span class="pill join">Join</span>
-              <span class="pill gray">Auto-join</span>
-              <span class="pill gray">Dismiss</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
 
-  <!-- Feature 3: Join -->
-  <section class="feature flip">
-    <div class="feature-visual" aria-hidden="true">
-      <div class="join-demo">
-        <div class="join-card">
+      <ol class="stops">
+        <li class="stop y">
+          <div class="when"><span class="t">All day</span><span class="label">In the menu bar</span></div>
           <div>
-            <div class="title">Customer Call</div>
-            <div class="when">2:00 PM · Zoom</div>
+            <h3>A ring that fills as the meeting gets closer</h3>
+            <p>One glance tells you how long you have. Click it to see the rest of your day, with a <strong>Join</strong> button for the next meeting.</p>
           </div>
-          <span class="btn">Join</span>
-        </div>
-        <div class="chips">
-          <span class="chip">Zoom</span>
-          <span class="chip">Google Meet</span>
-          <span class="chip">Microsoft Teams</span>
-          <span class="chip">Webex</span>
-        </div>
-      </div>
-    </div>
-    <div class="feature-copy">
-      <span class="kicker">STRAIGHT INTO THE CALL</span>
-      <h2>One click to join.</h2>
-      <p>Heads Up finds the meeting link buried in the invite — Zoom, Google Meet, Microsoft Teams, Webex, or any other link — and puts a Join button everywhere a reminder appears.</p>
-    </div>
-  </section>
-
-  <!-- Capability trio -->
-  <section class="alt-bg">
-    <div class="trio">
-      <div class="trio-card">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F5A21A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 9.5 H21"/><path d="M8 3 V6.5 M16 3 V6.5"/></svg>
-        <span class="t">Every calendar you use</span>
-        <p>Works with anything in the macOS Calendar app — iCloud, Google, Outlook, and Exchange accounts.</p>
-      </div>
-      <div class="trio-card">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F5A21A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5 H20 L14 12.5 V19 L10 17 V12.5 Z"/></svg>
-        <span class="t">Only real meetings</span>
-        <p>All-day events, declined invites, and "free" blocks are filtered out, so reminders only fire for meetings you'll actually attend.</p>
-      </div>
-      <div class="trio-card">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F5A21A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 V11"/><path d="M6.6 6.6 a7.5 7.5 0 1 0 10.8 0"/></svg>
-        <span class="t">Always on duty</span>
-        <p>Turn on "Launch when I log in" once, and Heads Up is quietly watching your calendar every time you sit down.</p>
-      </div>
+          <img class="shot tall" src="./img/dropdown.jpg" width="846" height="1002" loading="lazy"
+               alt="The Heads Up menu open from the menu bar, showing the next meeting with a Join button and the day's meetings">
+        </li>
+        <li class="stop o">
+          <div class="when"><span class="t">−5:00</span><span class="label">Or 15, 10, or 2 minutes. You choose</span></div>
+          <div>
+            <h3>A reminder card with a live countdown</h3>
+            <p>It appears with a chime. Join now, dismiss it, or press <strong>Auto-join</strong> and Heads Up opens the meeting link for you the moment it starts.</p>
+          </div>
+          <img class="shot card" src="./img/card.jpg" width="756" height="518" loading="lazy"
+               alt="The reminder card: Starts in 2:25, Design Review, with Join, Auto-join, and Dismiss buttons">
+        </li>
+        <li class="stop r">
+          <div class="when"><span class="t">0:00</span><span class="label">The meeting starts</span></div>
+          <div>
+            <h3>Your whole screen, until you act</h3>
+            <p>The reminder dims everything behind it, on every monitor if you like, and stays until you join or dismiss. No banner to swipe away on reflex. <strong>Esc</strong> dismisses, <strong>Return</strong> joins.</p>
+          </div>
+          <img class="shot" src="./img/takeover.jpg" width="1800" height="900" loading="lazy"
+               alt="A Mac desktop dimmed behind the Heads Up reminder for Design Review">
+        </li>
+      </ol>
     </div>
   </section>
 
-  <!-- Privacy band -->
-  <section class="band">
-    <div class="band-head">
-      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#F5A21A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 L19.5 6 V11 C19.5 16 16.5 19.5 12 21 C7.5 19.5 4.5 16 4.5 11 V6 Z"/><path d="M9 11.5 L11.2 13.7 L15.2 9.2"/></svg>
-      <h2>Private by design.</h2>
-      <p>Heads Up reads your calendar on your Mac to find your next meeting — and does nothing else with it. The only network activity is your browser opening a link when you click Join.</p>
-    </div>
-    <div class="band-points">
-      <span class="point"><svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="#FFA829" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 8.5 L6.5 12 L13 4.5"/></svg>No account</span>
-      <span class="point"><svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="#FFA829" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 8.5 L6.5 12 L13 4.5"/></svg>No tracking</span>
-      <span class="point"><svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="#FFA829" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 8.5 L6.5 12 L13 4.5"/></svg>Read-only calendar access</span>
-      <span class="point"><svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="#FFA829" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 8.5 L6.5 12 L13 4.5"/></svg>Nothing leaves your Mac</span>
+  <section class="details" aria-labelledby="details-title">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="details-title">The details</h2>
+      </div>
+      <dl class="facts">
+        <div class="fact"><dt>Finds the meeting link</dt><dd>Zoom, Google Meet, Microsoft Teams, and Webex links, or any other link in the invite.</dd></div>
+        <div class="fact"><dt>Works with your calendars</dt><dd>Anything in the macOS Calendar app: iCloud, Google, Outlook, and Exchange.</dd></div>
+        <div class="fact"><dt>Skips what you're not attending</dt><dd>All-day events, declined invites, and "free" blocks never trigger a reminder.</dd></div>
+        <div class="fact"><dt>Handles double-booking</dt><dd>When two meetings start together, one reminder lists both, each with its own Join.</dd></div>
+        <div class="fact"><dt>Starts when you log in</dt><dd>Turn on "Launch when I log in" once and it's there every morning.</dd></div>
+        <div class="fact"><dt>Light, dark, or quiet</dt><dd>Follows your Mac's appearance. Turn the sound or the animation off in Preferences.</dd></div>
+      </dl>
     </div>
   </section>
 
-  <!-- Pricing -->
-  <section class="pricing" id="pricing">
-    <h2>One price. Yours forever.</h2>
-    <div class="price">$19.99</div>
-    <p>A single purchase on the Mac App Store — less than a year of a subscription reminder app, and you never pay again. No account, no upsells; just an app that gets you to your meetings.</p>
-    <a class="cta large" href="https://apps.apple.com/app/id6794951718" target="_blank" rel="noopener">
-      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 2 v9"/><path d="M5.5 8 L9 11.5 L12.5 8"/><path d="M3 12.5 V14 a1.5 1.5 0 0 0 1.5 1.5 h9 a1.5 1.5 0 0 0 1.5 -1.5 v-1.5"/></svg>
-      Download on the Mac App Store
-    </a>
-    <span class="fine">Requires macOS 13 or later.</span>
+  <section class="deal" id="price" aria-labelledby="price-title">
+    <div class="wrap deal-grid">
+      <div>
+        <div class="price" aria-hidden="true">$19.99<small>once</small></div>
+        <h2 id="price-title">Pay once. It's yours.</h2>
+        <p>One purchase on the Mac App Store. No subscription, no account, no upsells.</p>
+        <a class="get" href="https://apps.apple.com/app/id6794951718" target="_blank" rel="noopener">Get it on the Mac App Store</a><br>
+        <a class="compare" href="./vs-in-your-face">How it compares to In Your Face →</a>
+      </div>
+      <div class="private">
+        <span class="label" style="color: var(--amber)">Private by design</span>
+        <ul>
+          <li>Your calendar stays on your Mac. Access is read-only.</li>
+          <li>No account, no sign-in, no analytics.</li>
+          <li>No network requests of its own. The only thing that goes online is your browser, when you click Join.</li>
+        </ul>
+      </div>
+    </div>
   </section>
 
-  <section style="max-width: 640px; margin: 0 auto; padding: 8px 24px 96px; text-align: center;">
-    <div style="font-size: 13px; font-weight: 700; letter-spacing: 1px; color: var(--link); margin-bottom: 14px;">FROM THE DEVELOPER</div>
-    <p style="font-size: 18px; line-height: 1.7; color: var(--muted); margin: 0;">I built Heads Up because I kept missing meetings — not from not caring, but because I'd get deep into something and look up too late. Every reminder I tried was too easy to ignore, so I made the one I actually needed: a countdown I can glance at, and a reminder that takes over the screen when it matters. It reads your calendar on your Mac and does nothing else with it — and it's a one-time purchase, because I didn't want to charge you every month to be reminded of your own meetings.</p>
-    <p style="font-size: 16px; color: var(--ink); font-weight: 600; margin: 16px 0 0;">— Brad, Benvenuti Software</p>
+  <section class="note" aria-label="A note from the developer">
+    <div class="wrap">
+      <blockquote>
+        <p>I built Heads Up because I kept missing meetings. Not from not caring: I'd get deep into something and look up too late. Every reminder I tried was too easy to ignore, so I made the one I needed, a countdown I can glance at and a reminder that takes over the screen when it matters. It's a one-time purchase because I didn't want to charge you every month to be reminded of your own meetings.</p>
+        <cite>Brad · Benvenuti Software</cite>
+      </blockquote>
+    </div>
   </section>
 </main>
 
 <footer>
-  <span>© 2026 Benvenuti Software</span>
-  <div class="links">
-    <a href="mailto:support@benvenutisoftware.com">support@benvenutisoftware.com</a>
-    <a href="./mac-meeting-reminder">Mac Meeting Reminder</a>
-    <a href="./time-blindness">Time Blindness &amp; ADHD</a>
-    <a href="./vs-in-your-face">vs In Your Face</a>
-    <a href="./press">Press</a>
-    <a href="./support">Support</a>
-    <a href="./privacy">Privacy Policy</a>
+  <div class="wrap foot">
+    <span>© 2026 Benvenuti Software · <a href="mailto:support@benvenutisoftware.com">support@benvenutisoftware.com</a></span>
+    <nav aria-label="Footer">
+      <a href="./mac-meeting-reminder">Mac meeting reminder</a>
+      <a href="./time-blindness">Time blindness &amp; ADHD</a>
+      <a href="./vs-in-your-face">vs In Your Face</a>
+      <a href="./press">Press</a>
+      <a href="./support">Support</a>
+      <a href="./privacy">Privacy</a>
+    </nav>
   </div>
 </footer>
 
+<div class="takeover" id="takeover" role="dialog" aria-modal="true" aria-labelledby="tk-title" aria-describedby="tk-note" hidden>
+  <div class="rcard">
+    <div class="rc-label">Starts in</div>
+    <div class="rc-count">0:00</div>
+    <div class="rc-title" id="tk-title">Your 10-second meeting</div>
+    <div class="rc-range" id="tk-range"></div>
+    <div class="rc-actions">
+      <button class="rc-btn join" id="tk-join" type="button">Join</button>
+      <button class="rc-btn" id="tk-dismiss" type="button">Dismiss</button>
+    </div>
+  </div>
+  <p class="tk-note" id="tk-note">This is what Heads Up does when a meeting starts. In the app, Join opens the meeting link. Press <kbd>esc</kbd> to dismiss.</p>
+</div>
+
+<script>
+(function () {
+  // Tour video: load and play only on request.
+  var video = document.getElementById('promo'), play = video.nextElementSibling;
+  play.addEventListener('click', function () { play.remove(); video.controls = true; video.play(); });
+
+  // Live dial: counts to the next :00 or :30, or to a 10-second demo meeting.
+  var arc = document.getElementById('arc'), count = document.getElementById('count'),
+      until = document.getElementById('until'), label = document.getElementById('dial-label'),
+      tryBtn = document.getElementById('try'), takeover = document.getElementById('takeover'),
+      CIRC = 678.6, demoEnd = null, opener = null;
+  var timeFmt = new Intl.DateTimeFormat(undefined, { hour: 'numeric', minute: '2-digit' });
+
+  function color(sec) { return sec <= 0 ? 'var(--t-red)' : sec <= 300 ? 'var(--t-orange)' : 'var(--t-yellow)'; }
+  function mmss(sec) { var s = Math.max(0, Math.ceil(sec)); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); }
+
+  function tick() {
+    var now = Date.now(), total, end;
+    if (demoEnd) {
+      total = 10; end = demoEnd;
+    } else {
+      total = 1800; end = Math.ceil((now + 1) / 1800000) * 1800000;
+    }
+    var left = (end - now) / 1000;
+    count.textContent = mmss(left);
+    count.style.color = color(demoEnd ? left : Math.ceil(left));
+    arc.style.strokeDashoffset = CIRC * Math.max(0, left / total);
+    if (!demoEnd) until.textContent = 'until ' + timeFmt.format(end);
+    if (demoEnd && left <= 0) { demoEnd = null; showTakeover(); }
+  }
+
+  tryBtn.addEventListener('click', function () {
+    demoEnd = Date.now() + 10000;
+    label.textContent = 'Your meeting starts in';
+    until.textContent = 'Keep reading. It will find you.';
+    tryBtn.disabled = true;
+    tick();
+  });
+
+  var note = document.getElementById('tk-note'), noteHTML = note.innerHTML;
+  function showTakeover() {
+    var start = new Date();
+    note.innerHTML = noteHTML;
+    document.getElementById('tk-range').textContent =
+      timeFmt.format(start) + '–' + timeFmt.format(new Date(start.getTime() + 30 * 60000));
+    opener = document.activeElement;
+    takeover.hidden = false;
+    document.body.style.overflow = 'hidden';
+    document.getElementById('tk-join').focus();
+  }
+  function hideTakeover() {
+    takeover.hidden = true;
+    document.body.style.overflow = '';
+    label.textContent = 'The next half hour';
+    tryBtn.disabled = false;
+    (opener && opener !== document.body ? opener : tryBtn).focus();
+    tick();
+  }
+  document.getElementById('tk-dismiss').addEventListener('click', hideTakeover);
+  document.getElementById('tk-join').addEventListener('click', function () {
+    note.textContent = 'In the app, that opens your Zoom, Meet, Teams, or Webex link. Here, it just closes the demo.';
+    setTimeout(hideTakeover, 1800);
+  });
+  document.addEventListener('keydown', function (e) {
+    if (takeover.hidden) return;
+    if (e.key === 'Escape') hideTakeover();
+    if (e.key === 'Tab') { // keep focus on the two buttons, like a modal window
+      var a = document.getElementById('tk-join'), b = document.getElementById('tk-dismiss');
+      if (e.shiftKey && document.activeElement === a) { e.preventDefault(); b.focus(); }
+      else if (!e.shiftKey && document.activeElement === b) { e.preventDefault(); a.focus(); }
+    }
+  });
+
+  tick();
+  setInterval(tick, 250);
+})();
+</script>
 </body>
 </html>
