@@ -32,6 +32,18 @@
   "publisher": { "@type": "Organization", "name": "Benvenuti Software", "url": "https://benvenutisoftware.com" }
 }
 </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "VideoObject",
+  "name": "Heads Up — never miss your next meeting",
+  "description": "A 29-second tour of Heads Up for Mac: the menu bar countdown, the full-screen meeting reminder, and Auto-join.",
+  "thumbnailUrl": "https://headsup.benvenutisoftware.com/video/promo-poster.jpg",
+  "contentUrl": "https://headsup.benvenutisoftware.com/video/promo.mp4",
+  "uploadDate": "2026-10-21",
+  "duration": "PT29S"
+}
+</script>
 <style>
   :root {
     --ink:#16161a; --muted:#5b5b66; --line:#e6e6ec; --accent:#F5A21A;
@@ -124,6 +136,26 @@
   .dd-row { display: flex; gap: 14px; color: rgba(255,255,255,.85); }
   .dd-row .time { width: 44px; color: rgba(255,255,255,.5); font-variant-numeric: tabular-nums; }
   .dd-menu { display: flex; flex-direction: column; gap: 7px; color: rgba(255,255,255,.75); }
+
+  /* ---------- Promo video ---------- */
+  .hero-video { max-width: 1040px; margin: 96px auto 0; padding: 0 24px; text-align: center; }
+  .hero-video .label { font-size: 13px; font-weight: 700; letter-spacing: 1px; color: var(--amber); margin-bottom: 18px; }
+  .video-frame {
+    position: relative; border-radius: 18px; overflow: hidden; aspect-ratio: 16 / 9; background: #0F0F16;
+    border: 1px solid rgba(255,255,255,.10); box-shadow: 0 32px 90px rgba(0,0,0,.55);
+  }
+  .video-frame video { display: block; width: 100%; height: 100%; }
+  .play {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    background: rgba(10,10,16,.18); border: 0; cursor: pointer; padding: 0;
+  }
+  .play span {
+    width: 88px; height: 88px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, var(--amber), var(--coral)); box-shadow: 0 14px 40px rgba(255,74,102,.45);
+    transition: transform .15s ease;
+  }
+  .play:hover span { transform: scale(1.07); }
+  .play:focus-visible span { outline: 3px solid #fff; outline-offset: 4px; }
 
   /* ---------- Feature rows ---------- */
   .feature {
@@ -228,6 +260,8 @@
     .hero-copy, .hero-cta { align-items: center; }
     .hero-visual { align-items: center; }
     .hero-visual::before { display: none; }
+    .hero-video { margin-top: 64px; }
+    .play span { width: 68px; height: 68px; }
     .dropdown { margin-right: 0; }
     .feature, .alt-bg .feature-inner { grid-template-columns: 1fr; gap: 40px; text-align: center; padding: 64px 24px; }
     .alt-bg .feature-inner { padding: 0; }
@@ -318,6 +352,23 @@
       </div>
     </div>
   </div>
+
+  <div class="hero-video">
+    <div class="label">SEE IT IN ACTION · 29 SEC</div>
+    <div class="video-frame">
+      <video id="promo" src="./video/promo.mp4" poster="./video/promo-poster.jpg" preload="none" playsinline
+             aria-label="Heads Up promo video: menu bar countdown, full-screen reminder, and Auto-join"></video>
+      <button class="play" type="button" aria-label="Play the Heads Up video">
+        <span><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path d="M10 6.5 L24 15 L10 23.5 Z" fill="#fff"/></svg></span>
+      </button>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var v = document.getElementById('promo'), b = v.nextElementSibling;
+      b.addEventListener('click', function () { b.remove(); v.controls = true; v.play(); });
+    })();
+  </script>
 </header>
 
 <main>
