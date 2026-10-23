@@ -1,5 +1,5 @@
 /* Shared styles for the subpages. Tokens match index.html: dusk masthead,
-   SF throughout (no web fonts, so no third-party requests), SF Mono for
+   SF throughout (no web fonts), SF Mono for
    labels, and the app's countdown colours used only where they mean time. */
 :root {
   --dusk: #17162B; --dusk-2: #201E3A; --night: #0E0D18;
