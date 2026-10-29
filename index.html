@@ -3,22 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Heads Up — Meeting Reminders in Your Mac Menu Bar</title>
-<meta name="description" content="Heads Up counts down to your next meeting in your Mac's menu bar and takes over your screen the moment it starts. $19.99 once. No account, no tracking.">
+<title>Heads Up — Meeting Reminders &amp; Auto-join for Mac</title>
+<meta name="description" content="A Mac menu bar countdown to your next meeting, a full-screen reminder when it starts, and Auto-join that opens Zoom, Meet, or Teams for you. $19.99 once. No account, no tracking.">
 <link rel="canonical" href="https://headsup.benvenutisoftware.com/">
 <link rel="icon" href="./favicon.svg" type="image/svg+xml">
 <meta name="theme-color" content="#17162B">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Heads Up">
-<meta property="og:title" content="Heads Up — Meeting Reminders in Your Mac Menu Bar">
-<meta property="og:description" content="Counts down to your next meeting in your menu bar, takes over your screen when it starts. $19.99 once — no subscription.">
+<meta property="og:title" content="Heads Up — Meeting Reminders &amp; Auto-join for Mac">
+<meta property="og:description" content="Counts down to your next meeting in your menu bar, takes over your screen when it's time, and Auto-join opens the meeting for you. $19.99 once — no subscription.">
 <meta property="og:url" content="https://headsup.benvenutisoftware.com/">
 <meta property="og:image" content="https://headsup.benvenutisoftware.com/social.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Heads Up — Meeting Reminders in Your Mac Menu Bar">
-<meta name="twitter:description" content="Counts down to your next meeting in your menu bar, takes over your screen when it starts. $19.99 once — no subscription.">
+<meta name="twitter:title" content="Heads Up — Meeting Reminders &amp; Auto-join for Mac">
+<meta name="twitter:description" content="Counts down to your next meeting in your menu bar, takes over your screen when it's time, and Auto-join opens the meeting for you. $19.99 once — no subscription.">
 <meta name="twitter:image" content="https://headsup.benvenutisoftware.com/social.png">
 <script type="application/ld+json">
 {
@@ -26,7 +26,7 @@
   "@type": "SoftwareApplication",
   "name": "Heads Up",
   "url": "https://headsup.benvenutisoftware.com",
-  "description": "A macOS menu bar app that counts down to your next meeting and shows a full-screen reminder the moment it starts.",
+  "description": "A macOS menu bar app that counts down to your next meeting, shows a full-screen reminder you can't miss, and can open the meeting for you with Auto-join.",
   "operatingSystem": "macOS 13.0 or later",
   "applicationCategory": "ProductivityApplication",
   "offers": { "@type": "Offer", "price": "19.99", "priceCurrency": "USD" },
@@ -187,7 +187,7 @@
   }
   .takeover[hidden] { display: none; }
   .rcard {
-    width: min(380px, 100%); padding: 32px; border-radius: 20px; text-align: center; color: #fff;
+    width: min(400px, 100%); padding: 32px; border-radius: 20px; text-align: center; color: #fff;
     background: #262626; border: 1px solid rgba(255,255,255,.08); box-shadow: 0 16px 68px rgba(0,0,0,.45);
     font-family: var(--sans);
   }
@@ -200,11 +200,8 @@
   .rc-btn.join { background: var(--join); }
   .tk-note { max-width: 30em; text-align: center; font-size: 15px; line-height: 1.55; color: rgba(255,255,255,.8); }
   .tk-note kbd { font: 600 12px var(--mono); border: 1px solid rgba(255,255,255,.35); border-radius: 5px; padding: 1px 6px; }
-  .precard { position: fixed; z-index: 90; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(320px, calc(100% - 32px)); padding: 24px; }
-  .precard[hidden] { display: none; }
-  .precard .rc-count { font-size: 56px; color: var(--t-orange); }
-  .precard .rc-title { font-size: 16px; }
-  .precard .rc-btn { font-size: 13px; }
+  #precard .rc-count { color: var(--t-orange); }
+  .rc-btn.later { flex: 0 0 auto; padding: 9px 16px; }   /* natural width, as in the app */
   .toast {
     position: fixed; z-index: 110; left: 50%; bottom: 28px; transform: translateX(-50%); width: max-content; max-width: calc(100% - 32px);
     background: #262626; color: #fff; border: 1px solid rgba(255,255,255,.1); border-radius: 12px; padding: 12px 18px;
@@ -258,10 +255,10 @@
   <div class="wrap hero-grid">
     <div>
       <h1>Never miss your next meeting.</h1>
-      <p class="hero-sub">Heads Up counts down to your next meeting in your Mac's menu bar. When the meeting starts, it takes over your screen until you join or dismiss it.</p>
+      <p class="hero-sub">Heads Up counts down to your next meeting in your Mac's menu bar. When it's time, it takes over your screen, or opens the meeting for you with Auto-join.</p>
       <div class="hero-cta">
         <a class="get" href="https://apps.apple.com/app/apple-store/id6794951718?pt=427591&amp;ct=web-home&amp;mt=8" target="_blank" rel="noopener">Get it on the Mac App Store</a>
-        <span class="fine">$19.99 once · macOS 13 or later</span>
+        <span class="fine">Auto-join for Zoom, Meet, Teams &amp; Webex<br>$19.99 once · macOS 13 or later</span>
       </div>
     </div>
 
@@ -317,16 +314,16 @@
         <li class="stop o">
           <div class="when"><span class="t">−5:00</span><span class="label">Or 15, 10, or 2 minutes. You choose</span></div>
           <div>
-            <h3>A reminder card with a live countdown</h3>
-            <p>It appears with a chime. Join now, dismiss it, or press <strong>Auto-join</strong> and Heads Up opens the meeting link for you the moment it starts.</p>
+            <h3>A full-screen reminder with a live countdown</h3>
+            <p>It takes over your screen with a chime. Join now, choose <strong>Remind Me Later</strong> to hear from it again at the start, or press <strong>Auto-join</strong> and Heads Up opens the meeting link for you the moment it starts.</p>
           </div>
-          <img class="shot card" src="./img/card.jpg" width="756" height="518" loading="lazy"
-               alt="The reminder card: Starts in 2:25, Design Review, with Join, Auto-join, and Dismiss buttons">
+          <img class="shot card" src="./img/card.jpg" width="1200" height="786" loading="lazy"
+               alt="The reminder: Starts in 2:34, Design Review, with Join, Auto-join, and Remind Me Later buttons">
         </li>
         <li class="stop r">
           <div class="when"><span class="t">0:00</span><span class="label">The meeting starts</span></div>
           <div>
-            <h3>Your whole screen, until you act</h3>
+            <h3>Again at the start, until you act</h3>
             <p>The reminder dims everything behind it, on every monitor if you like, and stays until you join or dismiss. No banner to swipe away on reflex. <strong>Esc</strong> dismisses, <strong>Return</strong> joins.</p>
           </div>
           <img class="shot" src="./img/takeover.jpg" width="1800" height="900" loading="lazy"
@@ -388,16 +385,19 @@
   </div>
 </footer>
 
-<div class="rcard precard" id="precard" role="dialog" aria-labelledby="pc-title" hidden>
-  <div class="rc-label">Starts in</div>
-  <div class="rc-count" id="pc-count">0:10</div>
-  <div class="rc-title" id="pc-title">Design Review</div>
-  <div class="rc-range" id="pc-range"></div>
-  <div class="rc-actions">
-    <button class="rc-btn join" id="pc-join" type="button">Join</button>
-    <button class="rc-btn" id="pc-auto" type="button" title="Opens the meeting automatically when it starts">Auto-join</button>
-    <button class="rc-btn" id="pc-dismiss" type="button">Dismiss</button>
+<div class="takeover" id="precard" role="dialog" aria-modal="true" aria-labelledby="pc-title" aria-describedby="pc-note" hidden>
+  <div class="rcard">
+    <div class="rc-label">Starts in</div>
+    <div class="rc-count" id="pc-count">0:10</div>
+    <div class="rc-title" id="pc-title">Design Review</div>
+    <div class="rc-range" id="pc-range"></div>
+    <div class="rc-actions">
+      <button class="rc-btn join" id="pc-join" type="button">Join</button>
+      <button class="rc-btn" id="pc-auto" type="button" title="Opens the meeting automatically when it starts">Auto-join</button>
+      <button class="rc-btn later" id="pc-dismiss" type="button">Remind Me Later</button>
+    </div>
   </div>
+  <p class="tk-note" id="pc-note">This is the reminder a few minutes before a meeting (here, ten seconds). Remind Me Later hides it until the meeting starts.</p>
 </div>
 <div class="toast" id="toast" role="status" hidden></div>
 
@@ -423,7 +423,7 @@
 
   // Live dial: an example meeting counting down, as the app does.
   // "Skip to the start" plays the last ten seconds the way the app would:
-  // the reminder card (Join / Auto-join / Dismiss), then, at 0:00, either
+  // the early reminder (Join / Auto-join / Remind Me Later), then, at 0:00, either
   // the full-screen reminder or, after Auto-join, the meeting opening.
   var $ = function (id) { return document.getElementById(id); };
   var arc = $('arc'), count = $('count'), until = $('until'), tryBtn = $('try'),
@@ -444,6 +444,7 @@
 
   function reset() {
     phase = 'idle'; precard.hidden = true; tryBtn.disabled = false;
+    document.body.style.overflow = '';
     schedule(LEAD);
   }
 
@@ -466,11 +467,12 @@
     phase = 'card'; tryBtn.disabled = true;
     $('pc-range').textContent = range();
     precard.hidden = false;
+    document.body.style.overflow = 'hidden';
     $('pc-join').focus();
     tick();
   });
 
-  function closeCard(next) { precard.hidden = true; phase = next; tryBtn.focus(); }
+  function closeCard(next) { precard.hidden = true; document.body.style.overflow = ''; phase = next; tryBtn.focus(); }
   $('pc-join').addEventListener('click', function () {
     say('In the app, Join opens the meeting link right away.'); reset(); tryBtn.focus();
   });
@@ -497,7 +499,15 @@
     setTimeout(hideTakeover, 1800);
   });
   document.addEventListener('keydown', function (e) {
-    if (!precard.hidden && e.key === 'Escape') { closeCard('waiting'); return; }
+    if (!precard.hidden) {
+      if (e.key === 'Escape') closeCard('waiting');
+      if (e.key === 'Tab') { // keep focus on the three buttons, like a modal window
+        var first = $('pc-join'), last = $('pc-dismiss');
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+      return;
+    }
     if (takeover.hidden) return;
     if (e.key === 'Escape') hideTakeover();
     if (e.key === 'Tab') { // keep focus on the two buttons, like a modal window
